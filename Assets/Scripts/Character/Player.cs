@@ -5,10 +5,8 @@ using UnityEngine;
 public class Player : Character
 {
 
-    [SerializeField]
-    private CharacterController controller;
+    [SerializeField] private CharacterController controller;
     private Vector3 playerVelocity;
-    [SerializeField]
     private float playerSpeed = 10.0f;
     private float jumpHeight = 1.0f;
     private float gravityValue = -9.81f;
