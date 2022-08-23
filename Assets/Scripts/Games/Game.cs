@@ -18,9 +18,6 @@ public class Game : MonoBehaviour
         player = participants[indexPlayer];
         CharacterController controller = player.gameObject.AddComponent<CharacterController>();
         player.gameObject.AddComponent<PlayerController>().controller = controller;
-        Debug.Log(indexPlayer);
-        //player = Player(participants[indexPlayer]);
-        
         player.name = "Player";
        
     }
