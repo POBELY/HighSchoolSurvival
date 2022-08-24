@@ -11,7 +11,7 @@ public class ColorGame : Game
 
     private List<Color> colors = new List<Color> { Color.blue, Color.green, Color.red, Color.yellow };
 
-    private Dictionary<Character, Color> participantsColors = new Dictionary<Character, Color>();
+    private Dictionary<Character, Color> participantsColors = new Dictionary<Character, Color>(); // Datas
 
     [SerializeField] private Button buttonPrefab;
 
@@ -22,7 +22,7 @@ public class ColorGame : Game
     public override void Start()
     {
         base.Start();
-        ColorsAttribution();
+        
         // Instantiate GridLayoutGroup
         GameObject gridGameObject = new GameObject("ColorGameGridLayout");
         grid = gridGameObject.gameObject.AddComponent<GridLayoutGroup>();
@@ -30,22 +30,24 @@ public class ColorGame : Game
         grid.transform.localPosition = Vector3.zero;
         grid.childAlignment = TextAnchor.MiddleCenter;
         grid.constraint = UnityEngine.UI.GridLayoutGroup.Constraint.FixedRowCount;
-        // Instantiate buttons
+
         foreach (Character participant in participants)
         {
             if (participant != player)
             {
+                // Instantiate AI
+                participant.SetAI(new ColorGameAI(this, participant));
+                // Instantiate buttons
                 Button button = Instantiate(buttonPrefab);
                 button.transform.SetParent(grid.transform, false);
                 button.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = participant.name;
-                button.onClick.AddListener(delegate { AnswerPlayer(participant); });
+                button.onClick.AddListener(delegate { PlayerAnswer(participant); });
                 button.gameObject.SetActive(false);
                 buttons.Add(participant,button);
-#if DEBUG
-                button.GetComponent<Image>().color = participantsColors[participant];
-#endif
             }
         }
+        ColorsAttribution();
+
     }
 
     // Update is called once per frame
@@ -90,6 +92,10 @@ public class ColorGame : Game
 #if DEBUG
             Debug.Log("Participant " + participant.name + "was attributed color " + color2Attribute.ToString());
             participant.GetComponent<Renderer>().material.color = color2Attribute;
+            if (participant != player)
+            {
+                buttons[participant].GetComponent<Image>().color = participantsColors[participant];
+            }
 #endif
         }
 
@@ -100,7 +106,7 @@ public class ColorGame : Game
         return participantsColors[character1] == participantsColors[character2];
     }
 
-    public void AnswerPlayer(Character character)
+    public void PlayerAnswer(Character character)
     {
         if (Answer(player,character))
         {
@@ -109,6 +115,35 @@ public class ColorGame : Game
         {
             Debug.Log("FAILED Round");
         }
+        ParticipantsAnswer();
+    }
+
+    public void ParticipantAnswer(Character participant, Character answer)
+    {
+        if (! Answer(participant,answer))
+        {
+            Debug.Log("WRONG ANSWER for participant " + participant.name + " : " + answer.name);
+            participants.Remove(participant);
+            participantsColors.Remove(participant);
+            buttons.Remove(participant);
+            Destroy(participant.gameObject);
+        } else
+        {
+            Debug.Log("GOOD ANSWER for participant " + participant.name + " : " + answer.name);
+        }
+    }
+
+    public void ParticipantsAnswer()
+    {
+        foreach (Character participant in participants.ToArray())
+        {
+            if (participant != player)
+            {
+                buttons[participant].gameObject.SetActive(false);
+                participant.Answer();
+            }
+        }
+        ColorsAttribution();
     }
 
     void DisplayButton()

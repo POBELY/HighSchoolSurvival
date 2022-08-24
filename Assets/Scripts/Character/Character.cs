@@ -10,8 +10,7 @@ public class Character : MonoBehaviour
 
     //public string name;
     public CLASSNAME classname;
-
-
+    private AI ai;
 
     // Start is called before the first frame update
     void Start()
@@ -23,5 +22,15 @@ public class Character : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void Answer()
+    {
+        ai.Answer();
+    }
+
+    public void SetAI(AI _ai)
+    {
+        ai = _ai;
     }
 }

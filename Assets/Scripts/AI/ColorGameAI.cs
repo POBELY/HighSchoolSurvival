@@ -8,6 +8,12 @@ public class ColorGameAI : AI
     private ColorGame game;
     private Character participant;
 
+    public ColorGameAI(ColorGame _game, Character _participant) /*: base(_game,_participant)*/
+    {
+        game = _game;
+        participant = _participant;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +25,7 @@ public class ColorGameAI : AI
         
     }
 
-    Character Answer()
+    public override void Answer()
     {
         // TODO : swtch cases according to strategies
         // Random Answer
@@ -28,8 +34,6 @@ public class ColorGameAI : AI
         {
             partcipantSelected = game.GetRandomParticipant();
         }
-        return partcipantSelected;
-
-
+        game.ParticipantAnswer(participant,partcipantSelected);
     }
 }
