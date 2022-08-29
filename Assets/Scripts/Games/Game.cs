@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class Game : MonoBehaviour
 {
+
+    public enum STATE {START, RUNNING, PAUSE, FINNISH };
+
     [SerializeField] protected List<Character> participants;
     //protected Player player;
     protected Character player;
+    protected int nbParticipantsNeeded = 0;
+    protected STATE state = STATE.START;
 
     // Start is called before the first frame update
     public virtual void Start()

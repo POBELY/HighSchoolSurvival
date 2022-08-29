@@ -10,6 +10,7 @@ public class ColorGame : Game
 {
 
     private List<Color> colors = new List<Color> { Color.blue, Color.green, Color.red, Color.yellow };
+    private Dictionary<Color,String> colorsName = new Dictionary<Color, string>() { { Color.blue, "blue" }, { Color.green, "green" }, { Color.red, "red" }, {Color.yellow, "yellow"}};
 
     private Dictionary<Character, Color> participantsColors = new Dictionary<Character, Color>(); // Datas
 
@@ -22,7 +23,8 @@ public class ColorGame : Game
     public override void Start()
     {
         base.Start();
-        
+
+        nbParticipantsNeeded = 10;
         // Instantiate GridLayoutGroup
         GameObject gridGameObject = new GameObject("ColorGameGridLayout");
         grid = gridGameObject.gameObject.AddComponent<GridLayoutGroup>();
@@ -47,16 +49,29 @@ public class ColorGame : Game
             }
         }
         ColorsAttribution();
+        state = STATE.RUNNING;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) )
+        if (state == STATE.RUNNING)
         {
-            DisplayButton();
+            if (participants.Count >= nbParticipantsNeeded)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    DisplayButton();
+                }
+            }
+            else
+            {
+                Debug.Log("End ColorGame");
+                state = STATE.FINNISH;
+            }
         }
+
     }
 
     void ColorsAttribution()
@@ -81,8 +96,8 @@ public class ColorGame : Game
         // Give one random color to each participant
         foreach (Character participant in participants)
         {
-            int indexColor1Attribute = rand.Next(0, colors2Attribute.Keys.Count);
-            Color color2Attribute = (new List<Color>(colors2Attribute.Keys))[indexColor1Attribute];
+            int indexColor2Attribute = rand.Next(0, colors2Attribute.Keys.Count);
+            Color color2Attribute = (new List<Color>(colors2Attribute.Keys))[indexColor2Attribute];
             participantsColors[participant] = color2Attribute;        
             colors2Attribute[color2Attribute]--;
             if (colors2Attribute[color2Attribute] == 0)
@@ -90,7 +105,8 @@ public class ColorGame : Game
                 colors2Attribute.Remove(color2Attribute);
             }
 #if DEBUG
-            Debug.Log("Participant " + participant.name + "was attributed color " + color2Attribute.ToString());
+            string colorName = $"<color=#{ColorUtility.ToHtmlStringRGB(color2Attribute)}>" + colorsName[color2Attribute] + "</color>";
+            Debug.Log("Participant " + participant.name + " was attributed color " + colorName);
             participant.GetComponent<Renderer>().material.color = color2Attribute;
             if (participant != player)
             {
@@ -111,11 +127,16 @@ public class ColorGame : Game
         if (Answer(player,character))
         {
             Debug.Log("SUCCESS Round");
+            ParticipantsAnswer();
         } else
         {
             Debug.Log("FAILED Round");
+            participants.Remove(player);
+            participantsColors.Remove(player);
+            Destroy(player.gameObject);
+            state = STATE.FINNISH;
         }
-        ParticipantsAnswer();
+        
     }
 
     public void ParticipantAnswer(Character participant, Character answer)
@@ -149,7 +170,11 @@ public class ColorGame : Game
     void DisplayButton()
     {
 
-        grid.constraintCount =  Mathf.FloorToInt(Mathf.Sqrt(participants.Count));
+        grid.constraintCount =  Mathf.FloorToInt(Mathf.Sqrt(buttons.Count));
+        if ( buttons.Count % (grid.constraintCount - 1) == 0)
+        {
+            --grid.constraintCount;
+        }
         foreach (Button button in buttons.Values)
         {
             button.gameObject.SetActive(true);
