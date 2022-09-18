@@ -128,8 +128,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   classname: 0
+  strategy: 0
   relationsInit:
-  - character: {fileID: 0}
+  - character: {fileID: 7913822718161448967, guid: 0a81176667eb13e46ad1666a020de7b5, type: 3}
     value: 160
   - character: {fileID: 0}
     value: 160

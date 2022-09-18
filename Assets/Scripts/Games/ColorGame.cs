@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using System.Linq;
 
 
 public class ColorGame : Game
@@ -24,7 +25,6 @@ public class ColorGame : Game
     {
         base.Start();
 
-        nbParticipantsNeeded = 10;
         // Instantiate GridLayoutGroup
         GameObject gridGameObject = new GameObject("ColorGameGridLayout");
         grid = gridGameObject.gameObject.AddComponent<GridLayoutGroup>();
@@ -68,7 +68,7 @@ public class ColorGame : Game
             else
             {
                 Debug.Log("End ColorGame");
-                state = STATE.FINNISH;
+                state = STATE.FINISH;
             }
         }
 
@@ -84,15 +84,16 @@ public class ColorGame : Game
         {
             colors2Attribute[color] = participants.Count / colors.Count;
         }
+
         // Completing colors without repetition to have as much colors than participants
-        List<Color> colors2Add = colors;
+        List<Color> colors2Add = new List<Color>(colors);
         for (int i = 0; i < (participants.Count % colors.Count); ++i)
         {
             int indexColor2Add = rand.Next(0, colors2Add.Count);
             colors2Attribute[colors2Add[indexColor2Add]]++;
             colors2Add.Remove(colors2Add[indexColor2Add]);
         }
-
+        
         // Give one random color to each participant
         foreach (Character participant in participants)
         {
@@ -124,6 +125,8 @@ public class ColorGame : Game
 
     public void PlayerAnswer(Character character)
     {
+
+        // TODO : ParticipantAnswer(player,character)
         if (Answer(player,character))
         {
             Debug.Log("SUCCESS Round");
@@ -134,24 +137,13 @@ public class ColorGame : Game
             participants.Remove(player);
             participantsColors.Remove(player);
             Destroy(player.gameObject);
-            state = STATE.FINNISH;
+            state = STATE.FINISH;
         }
-        
     }
 
     public void ParticipantAnswer(Character participant, Character answer)
     {
-        if (! Answer(participant,answer))
-        {
-            Debug.Log("WRONG ANSWER for participant " + participant.name + " : " + answer.name);
-            participants.Remove(participant);
-            participantsColors.Remove(participant);
-            buttons.Remove(participant);
-            Destroy(participant.gameObject);
-        } else
-        {
-            Debug.Log("GOOD ANSWER for participant " + participant.name + " : " + answer.name);
-        }
+        answers.Add(participant, answer);
     }
 
     public void ParticipantsAnswer()
@@ -159,19 +151,49 @@ public class ColorGame : Game
         foreach (Character participant in participants.ToArray())
         {
             if (participant != player)
-            {
-                buttons[participant].gameObject.SetActive(false);
+            {     
                 participant.Answer();
             }
         }
+        CheckAnswers();
         ColorsAttribution();
     }
 
+    private void CheckAnswers()
+    {
+        List<Character> losingParticipants = new List<Character>();
+        foreach (Character participant in answers.Keys.ToArray())
+        {
+            buttons[participant].gameObject.SetActive(false);
+            Character answer = answers[participant];
+            if (!Answer(participant, answer))
+            {
+                Debug.Log("WRONG ANSWER for participant " + participant.name + " : " + answer.name);
+                losingParticipants.Add(participant);
+            }
+            else
+            {
+                Debug.Log("GOOD ANSWER for participant " + participant.name + " : " + answer.name);
+            }       
+        }
+        answers.Clear();
+        foreach (Character losingParticipant in losingParticipants)
+        {
+            // TODO : override character destruction / game destroy character method
+            participants.Remove(losingParticipant);
+            participantsColors.Remove(losingParticipant);
+            buttons.Remove(losingParticipant);
+            Destroy(losingParticipant.gameObject);
+        }
+        Debug.Log("End CheckAnswers");
+    }
+
+    // TODO : herit from UI
     void DisplayButton()
     {
 
         grid.constraintCount =  Mathf.FloorToInt(Mathf.Sqrt(buttons.Count));
-        if ( buttons.Count % (grid.constraintCount - 1) == 0)
+        if ((buttons.Count % (grid.constraintCount) != 0) && (buttons.Count % (grid.constraintCount - 1) == 0) )
         {
             --grid.constraintCount;
         }
@@ -179,5 +201,23 @@ public class ColorGame : Game
         {
             button.gameObject.SetActive(true);
         }
+    }
+
+    public int GetNbColors()
+    {
+        return colors.Count;
+    }
+
+    public Color GetData(Character character)
+    {
+        return participantsColors[character];
+    }
+
+    public Color GetAnotherRandomColor(Color color)
+    {
+        int index = colors.IndexOf(color);
+        System.Random rand = new System.Random();
+        int randomIndex = (index + rand.Next(1, colors.Count)) % colors.Count;
+        return colors[randomIndex];
     }
 }

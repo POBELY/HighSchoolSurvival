@@ -4,6 +4,20 @@ using UnityEngine;
 
 abstract public class AI
 {
+
+    public static bool BernoulliLaw(double value)
+    {
+        float rand = Random.value;
+        if (rand <= value)
+            return true;
+        else
+        {
+            return false;
+        }
+    }
+
+    public enum STRATEGY { CONFIANCE, MEFIANCE, RANDOM };
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +31,8 @@ abstract public class AI
     }
 
     // QUESTION : return bool ?
-    public abstract void Answer();
+    public abstract void Choice();
+
+    //public abstract void Ask(Character character);
 
 }

@@ -12,26 +12,27 @@ public class Character : MonoBehaviour
 
     //public string name;
     public CLASSNAME classname;
-    private AI ai;
-    //public RelationsDictionary relations;
+    //TODO genric AI
+    //private AI ai;
+    private ColorGameAI ai;
+    [SerializeField] private AI.STRATEGY strategy;
+
+    public static byte maxByteValue = 255;
     [Serializable] public struct RelationValue
     {
         public Character character;
         public byte value;
     }
-
-    [SerializeField] public List<RelationValue> relationsInit = new List<RelationValue>();
-    private Dictionary<Character, byte> relations = new Dictionary<Character, byte>();
+    //[SerializeField] public List<RelationValue> relationsInit = new List<RelationValue>();
+    // TODO : be private
+    //private Dictionary<Character, byte> relations = new Dictionary<Character, byte>();
+    public Dictionary<Character, byte> relations = new Dictionary<Character, byte>();
     public RelationsDictionary relations2;
 
     // Start is called before the first frame update
     void Start()
     {
-        // TODO : To Read from a file (excel or xml)
-        foreach (RelationValue relation in relationsInit)
-        {
-            relations[relation.character] = relation.value;
-        }
+
     }
 
     // Update is called once per frame
@@ -40,13 +41,31 @@ public class Character : MonoBehaviour
         
     }
 
-    public void Answer()
+    public Color Asked(Character character)
     {
-        ai.Answer();
+        return ai.Ask(character);
     }
 
-    public void SetAI(AI _ai)
+    public void Answer()
+    {
+        Debug.Log(name);
+        ai.Choice();
+    }
+
+    //public void SetAI(AI _ai)
+    public void SetAI(ColorGameAI _ai)
     {
         ai = _ai;
     }
+
+    public AI.STRATEGY GetStrategy()
+    {
+        return strategy;
+    }
+
+    public byte GetRelation(Character character)
+    {
+        return relations[character];
+    }
+
 }
