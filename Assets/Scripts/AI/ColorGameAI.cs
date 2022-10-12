@@ -29,8 +29,7 @@ public class ColorGameAI : AI
     public /*override*/ Color Ask(Character character)
     {
         Color participantColor = game.GetData(participant);
-        Debug.Log(participant.name);
-        Debug.Log(character.name);
+        Debug.Log(character.name + " Ask to " + participant.name);
         Debug.Log("Bernoulli Law p(" + participant.GetRelation(character) / (double) Character.maxByteValue + ")");
         if (AI.BernoulliLaw(participant.GetRelation(character) / (double) Character.maxByteValue)) {
             return participantColor;
@@ -54,6 +53,7 @@ public class ColorGameAI : AI
             case STRATEGY.CONFIANCE:
                 foreach (Character character in game.GetParticipants())
                 {
+                    // TODO : Take also potentially player answer in account
                     if (character != participant && character != game.GetPlayer())
                     {
                         if (character.Asked(participant) == participantColor)
@@ -71,7 +71,8 @@ public class ColorGameAI : AI
                 byte mefiance = (byte) (Character.maxByteValue / game.GetNbColors());
                 foreach (Character character in game.GetParticipants())
                 {
-                    if (character != participant)
+                    // TODO : Take also potentially player answer in account
+                    if (character != participant && character != game.GetPlayer())
                     {
                         if (character.Asked(participant) == participantColor)
                         {
@@ -88,7 +89,8 @@ public class ColorGameAI : AI
                     byte minConfiance = Character.maxByteValue;
                     foreach (Character character in game.GetParticipants())
                     {
-                        if (character != participant)
+                        // TODO : Take also potentially player answer in account
+                        if (character != participant && character != game.GetPlayer())
                         {
                             if (character.Asked(participant) != participantColor)
                             {
@@ -103,7 +105,7 @@ public class ColorGameAI : AI
                 }
                 break;
             default:
-                Debug.LogError("Strategy not impleented");
+                Debug.LogError("Strategy not implemented");
                 break;
         }
         game.ParticipantAnswer(participant, answer);

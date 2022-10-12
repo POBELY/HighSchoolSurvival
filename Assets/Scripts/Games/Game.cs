@@ -27,10 +27,11 @@ public class Game : MonoBehaviour
             students.Add(student, GameObject.Find(student).GetComponent<Character>());
         }
 
-        List<Dictionary<string, object>> data = CSVReader.Read("RelationsTable2");
+        List<Dictionary<string, object>> data = CSVReader.Read("ConfiancesTable");
         for (var i = 0; i < data.Count; ++i)
         {
             string name = data[i]["name"].ToString();
+            students[name].SetStrategy(data[i]["STRATEGY"].ToString());
             students[name].relations.Clear();
             foreach (string student in studentsName)
             {

@@ -63,6 +63,11 @@ public class Character : MonoBehaviour
         return strategy;
     }
 
+    public void SetStrategy(string _strategy)
+    {
+        strategy = AI.GetStrategy(_strategy);
+    }
+
     public byte GetRelation(Character character)
     {
         return relations[character];

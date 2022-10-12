@@ -156,6 +156,7 @@ public class ColorGame : Game
             }
         }
         CheckAnswers();
+        // TODO : Colors ATTRIBUTION only if State!=FINISH => nb participants > participants needed ?
         ColorsAttribution();
     }
 
