@@ -16,7 +16,17 @@ public class Player : Character
 
     }
 
-    void Update()
+    protected override void Update()
+    {
+        base.Update();
+        Debug.Log("Player Update with dialoguing : " + dialoguing);
+        if (! dialoguing) {
+            //Move();
+            Debug.Log("Player Move");
+        }
+    }
+
+    void Move()
     {
         if (controller.isGrounded && playerVelocity.y < 0)
         {

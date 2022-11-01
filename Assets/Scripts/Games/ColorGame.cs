@@ -10,6 +10,8 @@ using System.Linq;
 public class ColorGame : Game
 {
 
+    [SerializeField] private ColorGameUI gameUI;
+
     private List<Color> colors = new List<Color> { Color.blue, Color.green, Color.red, Color.yellow };
     private Dictionary<Color,String> colorsName = new Dictionary<Color, string>() { { Color.blue, "blue" }, { Color.green, "green" }, { Color.red, "red" }, {Color.yellow, "yellow"}};
 
@@ -21,7 +23,7 @@ public class ColorGame : Game
     private Dictionary<Character, Button> buttons = new Dictionary<Character, Button>();
 
     // Start is called before the first frame update
-    public override void Start()
+    protected override void Start()
     {
         base.Start();
 
@@ -60,15 +62,35 @@ public class ColorGame : Game
         {
             if (participants.Count >= nbParticipantsNeeded)
             {
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
                     DisplayButton();
                 }
+
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    gameUI.CreateDialogueBox(player, "Hello world !");
+                    player.SetDialoguing(true);
+                    state = STATE.DIALOGUE;
+                    // TODO : Doing via Player
+                    playerController.enabled = false;
+                    playerController.Move(Vector3.zero);
+                }                
             }
             else
             {
                 Debug.Log("End ColorGame");
                 state = STATE.FINISH;
+            }
+        } else if (state == STATE.DIALOGUE)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                gameUI.NextDialogueBox();
+                state = gameUI.Dialoguing() ? STATE.DIALOGUE : STATE.RUNNING;
+                player.SetDialoguing(gameUI.Dialoguing());
+                // TODO : Doing via Player
+                playerController.enabled = !gameUI.Dialoguing();
             }
         }
 

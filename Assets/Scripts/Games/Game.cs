@@ -6,13 +6,15 @@ using System.Linq;
 public class Game : MonoBehaviour
 {
 
-    public enum STATE {START, RUNNING, PAUSE, FINISH };
+    public enum STATE {START, RUNNING, DIALOGUE, PAUSE, FINISH };
 
     [SerializeField] protected List<Character> participants;
     // TODO : protected Dictionary<Character,AnsweType> participants;
     protected Dictionary<Character,Character> answers = new Dictionary<Character, Character>();
-    //protected Player player;
+    // protected Player player;
     protected Character player;
+    // TODO : update to be able to have multiple players (playerController attribute of Player)
+    protected CharacterController playerController;
     [SerializeField] protected int nbParticipantsNeeded = 0;
     protected STATE state = STATE.START;
 
@@ -46,7 +48,7 @@ public class Game : MonoBehaviour
 
 
     // Start is called before the first frame update
-    public virtual void Start()
+    protected virtual void Start()
     {
 
         LoadConfiances();
@@ -55,9 +57,8 @@ public class Game : MonoBehaviour
         int indexPlayer = rand.Next(0, participants.Count);
 
         player = participants[indexPlayer];
-        CharacterController controller = player.gameObject.AddComponent<CharacterController>();
-        player.gameObject.AddComponent<PlayerController>().controller = controller;
-        //player.name = "Player";
+        playerController = player.gameObject.AddComponent<CharacterController>();
+        player.gameObject.AddComponent<PlayerController>().controller = playerController;;
 
     }
 

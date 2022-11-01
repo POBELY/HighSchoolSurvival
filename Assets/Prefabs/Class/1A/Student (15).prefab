@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8897447232597302757
+--- !u!1 &9191459327678959879
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,12 +8,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8897447232597302756}
-  - component: {fileID: 8897447232597302752}
-  - component: {fileID: 8897447232597302753}
-  - component: {fileID: 8897447232597302758}
-  - component: {fileID: 8897447232597302759}
-  - component: {fileID: 8897447232597302755}
+  - component: {fileID: 9191459327678959878}
+  - component: {fileID: 9191459327678959874}
+  - component: {fileID: 9191459327678959875}
+  - component: {fileID: 9191459327678959876}
+  - component: {fileID: 9191459327678959873}
   m_Layer: 0
   m_Name: Student (15)
   m_TagString: Untagged
@@ -21,14 +20,14 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8897447232597302756
+--- !u!4 &9191459327678959878
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8897447232597302757}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_GameObject: {fileID: 9191459327678959879}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 10, y: 0.5, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -36,21 +35,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &8897447232597302752
+--- !u!33 &9191459327678959874
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8897447232597302757}
+  m_GameObject: {fileID: 9191459327678959879}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &8897447232597302753
+--- !u!23 &9191459327678959875
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8897447232597302757}
+  m_GameObject: {fileID: 9191459327678959879}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -86,87 +85,34 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8897447232597302758
+--- !u!65 &9191459327678959876
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8897447232597302757}
+  m_GameObject: {fileID: 9191459327678959879}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &8897447232597302759
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8897447232597302757}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &8897447232597302755
+--- !u!114 &9191459327678959873
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8897447232597302757}
+  m_GameObject: {fileID: 9191459327678959879}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a11437fff2597b4c913535573c27423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   classname: 0
-  relationsInit:
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
-  - character: {fileID: 0}
-    value: 50
+  avatar: {fileID: 2800000, guid: 05c47aed273d6164a8f8c3a322455c67, type: 3}
+  strategy: 0
   relations2:
     _Buckets: ffffffffffffffffffffffff
     _HashCodes: 000000000000000000000000

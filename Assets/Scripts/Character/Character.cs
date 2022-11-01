@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 [Serializable] public class RelationsDictionary : SerializableDictionary<Character, byte> { }
 //[Serializable] public class MyDictionary : SerializableDictionary<string, int> { }
@@ -10,8 +11,10 @@ public class Character : MonoBehaviour
 {
     public enum CLASSNAME { A1, B1, C1, A2, B2, C2, A3, B3, C3 };
 
-    //public string name;
     public CLASSNAME classname;
+
+    [SerializeField] private Texture avatar;
+
     //TODO genric AI
     //private AI ai;
     private ColorGameAI ai;
@@ -23,11 +26,14 @@ public class Character : MonoBehaviour
         public Character character;
         public byte value;
     }
-    //[SerializeField] public List<RelationValue> relationsInit = new List<RelationValue>();
+
     // TODO : be private
     //private Dictionary<Character, byte> relations = new Dictionary<Character, byte>();
     public Dictionary<Character, byte> relations = new Dictionary<Character, byte>();
     public RelationsDictionary relations2;
+
+    protected bool dialoguing = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +42,7 @@ public class Character : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         
     }
@@ -50,6 +56,11 @@ public class Character : MonoBehaviour
     {
         Debug.Log(name);
         ai.Choice();
+    }
+
+    public byte GetRelation(Character character)
+    {
+        return relations[character];
     }
 
     //public void SetAI(AI _ai)
@@ -68,9 +79,14 @@ public class Character : MonoBehaviour
         strategy = AI.GetStrategy(_strategy);
     }
 
-    public byte GetRelation(Character character)
+    public Texture GetAvatar()
     {
-        return relations[character];
+        return avatar;
+    }
+
+    public void SetDialoguing(bool _dialoguing)
+    {
+        dialoguing = _dialoguing;
     }
 
 }

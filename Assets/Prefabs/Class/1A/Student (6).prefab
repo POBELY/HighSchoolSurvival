@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6996192913956363401
+--- !u!1 &1025966052550544455
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,12 +8,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6996192913956363382}
-  - component: {fileID: 6996192913956363378}
-  - component: {fileID: 6996192913956363381}
-  - component: {fileID: 6996192913956363380}
-  - component: {fileID: 6996192913956363383}
-  - component: {fileID: 6996192913956363379}
+  - component: {fileID: 1025966052550544568}
+  - component: {fileID: 1025966052550544572}
+  - component: {fileID: 1025966052550544571}
+  - component: {fileID: 1025966052550544570}
+  - component: {fileID: 1025966052550544573}
   m_Layer: 0
   m_Name: Student (6)
   m_TagString: Untagged
@@ -21,13 +20,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6996192913956363382
+--- !u!4 &1025966052550544568
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6996192913956363401}
+  m_GameObject: {fileID: 1025966052550544455}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -10, y: 0.5, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -36,21 +35,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6996192913956363378
+--- !u!33 &1025966052550544572
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6996192913956363401}
+  m_GameObject: {fileID: 1025966052550544455}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &6996192913956363381
+--- !u!23 &1025966052550544571
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6996192913956363401}
+  m_GameObject: {fileID: 1025966052550544455}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -86,87 +85,34 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6996192913956363380
+--- !u!65 &1025966052550544570
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6996192913956363401}
+  m_GameObject: {fileID: 1025966052550544455}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &6996192913956363383
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6996192913956363401}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &6996192913956363379
+--- !u!114 &1025966052550544573
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6996192913956363401}
+  m_GameObject: {fileID: 1025966052550544455}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a11437fff2597b4c913535573c27423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   classname: 0
-  relationsInit:
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 210
-  - character: {fileID: 0}
-    value: 210
-  - character: {fileID: 0}
-    value: 210
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
-  - character: {fileID: 0}
-    value: 100
+  avatar: {fileID: 2800000, guid: 2042c487224f57a4abb4a9ce6b4245eb, type: 3}
+  strategy: 0
   relations2:
     _Buckets: ffffffffffffffffffffffff
     _HashCodes: 000000000000000000000000
