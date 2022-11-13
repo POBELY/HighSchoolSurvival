@@ -8,7 +8,10 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
 
-    public Game currentGame;
+    // TODO : private with getters + submanagers
+    [SerializeField] public Game game;
+    [SerializeField] public UI ui;
+    // TODO : add player : submanager for each player ?
 
     private void Awake()
     {
@@ -25,7 +28,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // TODO : get Canvas via gameManager
+        // TODO : get Canvas via gameManager/UI
     }
 
     // Update is called once per frame
@@ -33,4 +36,5 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
 }

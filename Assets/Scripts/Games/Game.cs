@@ -9,12 +9,9 @@ public class Game : MonoBehaviour
     public enum STATE {START, RUNNING, DIALOGUE, PAUSE, FINISH };
 
     [SerializeField] protected List<Character> participants;
-    // TODO : protected Dictionary<Character,AnsweType> participants;
     protected Dictionary<Character,Character> answers = new Dictionary<Character, Character>();
-    // protected Player player;
-    protected Character player;
-    // TODO : update to be able to have multiple players (playerController attribute of Player)
-    protected CharacterController playerController;
+    // TODO : update to be able to have multiple players 
+    protected Player player;
     [SerializeField] protected int nbParticipantsNeeded = 0;
     protected STATE state = STATE.START;
 
@@ -53,19 +50,37 @@ public class Game : MonoBehaviour
 
         LoadConfiances();
 
+        // TODO : Create Player from Participant Character ? Create directly a Player in Lobby ? Can we replace character by player instead of creation + destruction ?
+        // TODO 2 : Lobby method ? method in GameManager Start ?
+        // Choose a random character to be player
         System.Random rand = new System.Random();
         int indexPlayer = rand.Next(0, participants.Count);
-
-        player = participants[indexPlayer];
-        playerController = player.gameObject.AddComponent<CharacterController>();
-        player.gameObject.AddComponent<PlayerController>().controller = playerController;;
-
+        Character character = participants[indexPlayer];
+        // Create Player
+        player = character.gameObject.AddComponent<Player>();
+        player.Create(character);
+        // Replace character reference by player
+        foreach (Character participant in participants)
+        {
+            if ( participant.CompareTag("Bot") ) {
+                participant.relations.Add(player, participant.relations[character]);
+                participant.relations.Remove(character);
+            }
+            
+        }
+        participants[indexPlayer] = player;
+        // Destroy unused character
+        Destroy(character);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public virtual void Discussion(Character sender, Character receiver) {
+        //Debug.Log("Game Discussion");
     }
 
     public List<Character> GetParticipants()

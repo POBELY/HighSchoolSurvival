@@ -10,10 +10,15 @@ using System.Linq;
 public class ColorGame : Game
 {
 
-    [SerializeField] private ColorGameUI gameUI;
-
     private List<Color> colors = new List<Color> { Color.blue, Color.green, Color.red, Color.yellow };
-    private Dictionary<Color,String> colorsName = new Dictionary<Color, string>() { { Color.blue, "blue" }, { Color.green, "green" }, { Color.red, "red" }, {Color.yellow, "yellow"}};
+
+    // TODO : static Tools method
+    private static Dictionary<Color,String> colorsName = new Dictionary<Color, string>() { { Color.blue, "blue" }, { Color.green, "green" }, { Color.red, "red" }, {Color.yellow, "yellow"}};
+    private static string Color2String(Color color)
+    {
+        return $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>" + colorsName[color] + "</color>";
+    }
+
 
     private Dictionary<Character, Color> participantsColors = new Dictionary<Character, Color>(); // Datas
 
@@ -37,7 +42,7 @@ public class ColorGame : Game
 
         foreach (Character participant in participants)
         {
-            if (participant != player)
+            if (participant.gameObject.CompareTag("Bot"))
             {
                 // Instantiate AI
                 participant.SetAI(new ColorGameAI(this, participant));
@@ -60,37 +65,24 @@ public class ColorGame : Game
     {
         if (state == STATE.RUNNING)
         {
-            if (participants.Count >= nbParticipantsNeeded)
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha1))
-                {
-                    DisplayButton();
-                }
 
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    gameUI.CreateDialogueBox(player, "Hello world !");
-                    player.SetDialoguing(true);
-                    state = STATE.DIALOGUE;
-                    // TODO : Doing via Player
-                    playerController.enabled = false;
-                    playerController.Move(Vector3.zero);
-                }                
-            }
-            else
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                Debug.Log("End ColorGame");
-                state = STATE.FINISH;
+                DisplayButton();
             }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                // TODO : define state by player ?
+                state = STATE.DIALOGUE;
+            }                
+
         } else if (state == STATE.DIALOGUE)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                gameUI.NextDialogueBox();
-                state = gameUI.Dialoguing() ? STATE.DIALOGUE : STATE.RUNNING;
-                player.SetDialoguing(gameUI.Dialoguing());
-                // TODO : Doing via Player
-                playerController.enabled = !gameUI.Dialoguing();
+                // TODO : define state by player ?
+                state = GameManager.Instance.ui.IsDialoguing() ? STATE.DIALOGUE : STATE.RUNNING;
             }
         }
 
@@ -128,8 +120,7 @@ public class ColorGame : Game
                 colors2Attribute.Remove(color2Attribute);
             }
 #if DEBUG
-            string colorName = $"<color=#{ColorUtility.ToHtmlStringRGB(color2Attribute)}>" + colorsName[color2Attribute] + "</color>";
-            Debug.Log("Participant " + participant.name + " was attributed color " + colorName);
+            //Debug.Log("Participant " + participant.name + " was attributed color " + Color2String(color2Attribute));
             participant.GetComponent<Renderer>().material.color = color2Attribute;
             if (participant != player)
             {
@@ -156,6 +147,7 @@ public class ColorGame : Game
         } else
         {
             Debug.Log("FAILED Round");
+            // TODO : EndGame/Losing method
             participants.Remove(player);
             participantsColors.Remove(player);
             Destroy(player.gameObject);
@@ -172,14 +164,15 @@ public class ColorGame : Game
     {
         foreach (Character participant in participants.ToArray())
         {
-            if (participant != player)
+            // TODO : void Answer for player
+            if (participant.CompareTag("Bot"))
             {     
                 participant.Answer();
             }
         }
         CheckAnswers();
         // TODO : Colors ATTRIBUTION only if State!=FINISH => nb participants > participants needed ?
-        ColorsAttribution();
+        //ColorsAttribution();
     }
 
     private void CheckAnswers()
@@ -200,15 +193,58 @@ public class ColorGame : Game
             }       
         }
         answers.Clear();
+        Debug.Log("End CheckAnswers");
+
+        // TODO : method to eliminate losing participants
         foreach (Character losingParticipant in losingParticipants)
         {
             // TODO : override character destruction / game destroy character method
             participants.Remove(losingParticipant);
             participantsColors.Remove(losingParticipant);
             buttons.Remove(losingParticipant);
+            player.UpdateRemovedParticipant(losingParticipant);
             Destroy(losingParticipant.gameObject);
         }
-        Debug.Log("End CheckAnswers");
+
+        // TODO ? : Make it in another method or in Update ?
+        // Start new Round or Finish Game
+        if (participants.Count >= nbParticipantsNeeded)
+        {
+            Debug.Log("Reattributing colors");
+            ColorsAttribution();
+        } else
+        {
+            state = STATE.FINISH;
+            Debug.Log("End ColorGame");
+        }
+
+        
+    }
+
+    //TODO ? : public override void Discussion(Player sender, Bot receiver) | or assert and cast
+    public override void Discussion(Character sender, Character receiver)
+    {
+        // TODO : Create dialogue from source file
+        List<Message> dialogue = new List<Message>();
+        dialogue.Add(new Message(sender, "Hello, can you tell me your color please ?"));
+        if (receiver.CompareTag("Bot"))
+        {
+            Debug.Log("Bot Answer");
+            // TODO : Fixed Answer !!! One asked once, reply always the same thing
+            dialogue.Add(new Message(receiver, "Yes, It is " + Color2String(receiver.Asked(sender))));
+        } else
+        {
+            Debug.Log("Player Answer");
+            // TODO : Interractions with other players
+            dialogue.Add(new Message(receiver, "Yes, It is " + Color2String(GetData(receiver))));
+
+        }
+        
+        dialogue.Add(new Message(receiver, "And you ?"));
+        // TODO : player choice
+        dialogue.Add(new Message(sender, "For me, is " + Color2String(GetData(player))));
+        GameManager.Instance.ui.SetDialogue(dialogue);
+
     }
 
     // TODO : herit from UI

@@ -54,7 +54,7 @@ public class ColorGameAI : AI
                 foreach (Character character in game.GetParticipants())
                 {
                     // TODO : Take also potentially player answer in account
-                    if (character != participant && character != game.GetPlayer())
+                    if (character.CompareTag("Bot") && character != participant)
                     {
                         if (character.Asked(participant) == participantColor)
                         {
@@ -72,7 +72,7 @@ public class ColorGameAI : AI
                 foreach (Character character in game.GetParticipants())
                 {
                     // TODO : Take also potentially player answer in account
-                    if (character != participant && character != game.GetPlayer())
+                    if (character.CompareTag("Bot") && character != participant)
                     {
                         if (character.Asked(participant) == participantColor)
                         {
@@ -90,7 +90,7 @@ public class ColorGameAI : AI
                     foreach (Character character in game.GetParticipants())
                     {
                         // TODO : Take also potentially player answer in account
-                        if (character != participant && character != game.GetPlayer())
+                        if (character.CompareTag("Bot") && character != participant)
                         {
                             if (character.Asked(participant) != participantColor)
                             {

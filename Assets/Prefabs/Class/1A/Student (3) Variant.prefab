@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &7075221973676459854
+--- !u!1001 &4469643868180981229
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8370919209381684576, guid: 90cfe11bd4cb0e240a77436b4ce6f3ca, type: 3}
       propertyPath: m_Name
-      value: Student (1)
+      value: Student (3) Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8370919209381684579, guid: 90cfe11bd4cb0e240a77436b4ce6f3ca, type: 3}
       propertyPath: m_RootOrder
@@ -58,6 +58,6 @@ PrefabInstance:
     - target: {fileID: 8370919209381684590, guid: 90cfe11bd4cb0e240a77436b4ce6f3ca, type: 3}
       propertyPath: avatar
       value: 
-      objectReference: {fileID: 2800000, guid: 271ac7e7950a8094996b55284dd948ab, type: 3}
+      objectReference: {fileID: 2800000, guid: e88784db73d85f84e8dde9a0d6b154d8, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90cfe11bd4cb0e240a77436b4ce6f3ca, type: 3}

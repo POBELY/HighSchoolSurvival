@@ -13,13 +13,15 @@ public class Character : MonoBehaviour
 
     public CLASSNAME classname;
 
-    [SerializeField] private Texture avatar;
+    [SerializeField] protected Texture avatar;
 
+    // ai is specific bot attribute
     //TODO genric AI
     //private AI ai;
     private ColorGameAI ai;
     [SerializeField] private AI.STRATEGY strategy;
 
+    // TODO : Confiance instead of Realtion
     public static byte maxByteValue = 255;
     [Serializable] public struct RelationValue
     {
@@ -30,7 +32,7 @@ public class Character : MonoBehaviour
     // TODO : be private
     //private Dictionary<Character, byte> relations = new Dictionary<Character, byte>();
     public Dictionary<Character, byte> relations = new Dictionary<Character, byte>();
-    public RelationsDictionary relations2;
+    //public RelationsDictionary relations2;
 
     protected bool dialoguing = false;
 
@@ -47,6 +49,7 @@ public class Character : MonoBehaviour
         
     }
 
+    // TODO : Reanme method, we don't know who ask who when called (AskedBy ?)
     public Color Asked(Character character)
     {
         return ai.Ask(character);
