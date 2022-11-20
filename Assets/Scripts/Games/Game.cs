@@ -6,7 +6,7 @@ using System.Linq;
 public class Game : MonoBehaviour
 {
 
-    public enum STATE {START, RUNNING, DIALOGUE, PAUSE, FINISH };
+    public enum STATE {START, RUNNING, PAUSE, FINISH };
 
     [SerializeField] protected List<Character> participants;
     protected Dictionary<Character,Character> answers = new Dictionary<Character, Character>();
@@ -14,7 +14,6 @@ public class Game : MonoBehaviour
     protected Player player;
     [SerializeField] protected int nbParticipantsNeeded = 0;
     protected STATE state = STATE.START;
-
 
     public void LoadConfiances()
     {
@@ -66,7 +65,13 @@ public class Game : MonoBehaviour
                 participant.relations.Add(player, participant.relations[character]);
                 participant.relations.Remove(character);
             }
-            
+
+#if DEBUG
+            // To see relations
+            participant.CopyRelations();
+#endif
+
+
         }
         participants[indexPlayer] = player;
         // Destroy unused character

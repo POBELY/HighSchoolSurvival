@@ -55,9 +55,6 @@ public class Player : Character
             controller.Move(Vector3.zero);
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                //gameUI.NextDialogueBox();
-                //state = gameUI.Dialoguing() ? STATE.DIALOGUE : STATE.RUNNING;
-                // TODO : gameUI update player dialoging
                 dialoguing = GameManager.Instance.ui.IsDialoguing();
             }
         } else
@@ -73,8 +70,8 @@ public class Player : Character
                     // TODO : method to create specific game dialogueBox "Hors narration"
                     GameManager.Instance.game.Discussion(this, interlocutor);
 
-                    GameManager.Instance.ui.ActivateDialogueBox();
-                    GameManager.Instance.ui.ExecuteCurrentMessage();
+                    //GameManager.Instance.ui.ActivateDialogueBox();
+                    //GameManager.Instance.ui.ExecuteCurrentMessage();
                 }
             }
         }

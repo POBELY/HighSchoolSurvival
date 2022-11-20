@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Assertions;
 
 public class UI : MonoBehaviour
 {
@@ -35,10 +36,14 @@ public class UI : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (dialoguing && Input.GetKeyDown(KeyCode.Space))
+        if (dialoguing)
         {
-            Debug.Log("UI Update Space Bar");
-            ExecuteCurrentMessage();
+            UpdateCurrentMessage();
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Debug.Log("UI Update Space Bar");
+                ReadNextMessage();
+            }
         }
         
     }
@@ -62,11 +67,14 @@ public class UI : MonoBehaviour
     public void ActivateDialogueBox()
     {
         DialogueBoxActivation(true);
+        ReadFirstMessage();
     }
 
     public void DisactivateDialogueBox()
     {
         DialogueBoxActivation(false);
+        // TODO : Needed ? Clean via ReadNextMessage ? How to do with choice made by ChoiceMessage
+        dialogue.Clear();
     }
 
     public void DialogueBoxActivation(bool activation)
@@ -83,18 +91,32 @@ public class UI : MonoBehaviour
         avatar.texture = message.GetSpeaker().GetAvatar();
     }
 
-    public void ExecuteCurrentMessage()
+    private void UpdateCurrentMessage()
     {
-        Debug.Log("ExecuteCurrentMessage : " + dialogueIndex);
+        Assert.IsTrue(dialogue.Count > dialogueIndex);
+        dialogue[dialogueIndex].Update();
+    }
+
+    private void ReadFirstMessage()
+    {
+        Assert.IsTrue(dialogue.Count > 0);
+        Debug.Log("ReadFirstMessage : " + dialogueIndex);
+        dialogueIndex = 0;
+        dialogue[dialogueIndex].Execute();
+    }
+
+    private void ReadNextMessage()
+    {
+        Debug.Log("ReadNextMessage : " + dialogueIndex);
+        ++dialogueIndex;
         if (dialogue.Count > dialogueIndex)
         {
-            Debug.Log("ExecuteCurrentMessage Continue");
+            Debug.Log("ReadNextMessage Continue");
             dialogue[dialogueIndex].Execute();
-            ++dialogueIndex;
         }
         else
         {
-            Debug.Log("ExecuteCurrentMessage End");
+            Debug.Log("ReadNextMessage End");
             DisactivateDialogueBox();
             dialoguing = false;
         }

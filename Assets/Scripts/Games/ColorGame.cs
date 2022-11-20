@@ -12,7 +12,7 @@ public class ColorGame : Game
 
     private List<Color> colors = new List<Color> { Color.blue, Color.green, Color.red, Color.yellow };
 
-    // TODO : static Tools method
+    // TODO : static Tools/Utils method
     private static Dictionary<Color,String> colorsName = new Dictionary<Color, string>() { { Color.blue, "blue" }, { Color.green, "green" }, { Color.red, "red" }, {Color.yellow, "yellow"}};
     private static string Color2String(Color color)
     {
@@ -69,20 +69,6 @@ public class ColorGame : Game
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 DisplayButton();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                // TODO : define state by player ?
-                state = STATE.DIALOGUE;
-            }                
-
-        } else if (state == STATE.DIALOGUE)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                // TODO : define state by player ?
-                state = GameManager.Instance.ui.IsDialoguing() ? STATE.DIALOGUE : STATE.RUNNING;
             }
         }
 
@@ -193,7 +179,19 @@ public class ColorGame : Game
             }       
         }
         answers.Clear();
-        Debug.Log("End CheckAnswers");
+
+        // Cleaning Round
+
+        foreach (Character character in participants)
+        {
+            foreach (Character losingParticipant in losingParticipants)
+            {
+                if (!losingParticipants.Contains(character))
+                {
+                    character.relations.Remove(losingParticipant);
+                }
+            }
+        }
 
         // TODO : method to eliminate losing participants
         foreach (Character losingParticipant in losingParticipants)
@@ -204,6 +202,21 @@ public class ColorGame : Game
             buttons.Remove(losingParticipant);
             player.UpdateRemovedParticipant(losingParticipant);
             Destroy(losingParticipant.gameObject);
+        }
+
+        //TODO : surviving participants needs to update confiance according to other participants answers
+        foreach (Character character in participants)
+        {
+            Debug.Log(character.name);
+            //TODO : create Bot class and use directly Clear without Bot Condition
+            if (character.CompareTag("Bot"))
+            {
+                character.CheckAnswers(participantsColors);
+                character.Clear();
+#if DEBUG
+                character.CopyRelations();
+#endif
+            }
         }
 
         // TODO ? : Make it in another method or in Update ?
@@ -224,26 +237,32 @@ public class ColorGame : Game
     //TODO ? : public override void Discussion(Player sender, Bot receiver) | or assert and cast
     public override void Discussion(Character sender, Character receiver)
     {
+
         // TODO : Create dialogue from source file
         List<Message> dialogue = new List<Message>();
         dialogue.Add(new Message(sender, "Hello, can you tell me your color please ?"));
         if (receiver.CompareTag("Bot"))
         {
             Debug.Log("Bot Answer");
-            // TODO : Fixed Answer !!! One asked once, reply always the same thing
             dialogue.Add(new Message(receiver, "Yes, It is " + Color2String(receiver.Asked(sender))));
-        } else
+        }
+        else
         {
             Debug.Log("Player Answer");
             // TODO : Interractions with other players
             dialogue.Add(new Message(receiver, "Yes, It is " + Color2String(GetData(receiver))));
-
         }
-        
+
         dialogue.Add(new Message(receiver, "And you ?"));
-        // TODO : player choice
-        dialogue.Add(new Message(sender, "For me, is " + Color2String(GetData(player))));
+        List<string> colorChoices = new List<string>();
+        foreach (Color color in colors)
+        {
+            colorChoices.Add(Color2String(color));
+        }
+        dialogue.Add(new ChoicesMessage(sender, "For me, is ", colorChoices));
+        // TODO : Apply player Answer for Bot
         GameManager.Instance.ui.SetDialogue(dialogue);
+        GameManager.Instance.ui.ActivateDialogueBox();
 
     }
 

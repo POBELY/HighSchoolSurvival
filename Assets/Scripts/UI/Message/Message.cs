@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class Message {
 
-    private Character speaker;
-    private string message;
+    protected Character speaker;
+    protected string message;
 
     public Message(Character speaker, string message)
     {
         this.speaker = speaker;
         this.message = message;
+    }
+
+    public virtual void Update()
+    {
+
     }
 
     public virtual void Execute()

@@ -2,9 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// TODO : Check template<DataType,AnswerType>
 abstract public class AI
 {
 
+    protected static byte confianceDelta = 5;
+
+    //TODO : Tools/Utils method ?
     public static bool BernoulliLaw(double value)
     {
         float rand = Random.value;
@@ -50,5 +55,10 @@ abstract public class AI
     public abstract void Choice();
 
     //public abstract void Ask(Character character);
+
+    public virtual void Clear()
+    {
+
+    }
 
 }
