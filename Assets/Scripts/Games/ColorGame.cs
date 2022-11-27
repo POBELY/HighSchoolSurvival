@@ -6,21 +6,12 @@ using System;
 using TMPro;
 using System.Linq;
 
-
 public class ColorGame : Game
 {
 
-    private List<Color> colors = new List<Color> { Color.blue, Color.green, Color.red, Color.yellow };
+    private List<ColorData> colors = new List<ColorData> { new ColorData(Color.blue), new ColorData(Color.green), new ColorData(Color.red), new ColorData(Color.yellow) };
 
-    // TODO : static Tools/Utils method
-    private static Dictionary<Color,String> colorsName = new Dictionary<Color, string>() { { Color.blue, "blue" }, { Color.green, "green" }, { Color.red, "red" }, {Color.yellow, "yellow"}};
-    private static string Color2String(Color color)
-    {
-        return $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>" + colorsName[color] + "</color>";
-    }
-
-
-    private Dictionary<Character, Color> participantsColors = new Dictionary<Character, Color>(); // Datas
+    private Dictionary<Character, ColorData> participantsColors = new Dictionary<Character, ColorData>(); // Datas
 
     [SerializeField] private Button buttonPrefab;
 
@@ -78,15 +69,15 @@ public class ColorGame : Game
     {
         System.Random rand = new System.Random();
         // Determine all colors to attribute to participants
-        Dictionary<Color, int> colors2Attribute = new Dictionary<Color, int>();
+        Dictionary<ColorData, int> colors2Attribute = new Dictionary<ColorData, int>();
         // Initialize with minimum number to attribute for each color 
-        foreach (Color color in colors)
+        foreach (ColorData color in colors)
         {
             colors2Attribute[color] = participants.Count / colors.Count;
         }
 
         // Completing colors without repetition to have as much colors than participants
-        List<Color> colors2Add = new List<Color>(colors);
+        List<ColorData> colors2Add = new List<ColorData>(colors);
         for (int i = 0; i < (participants.Count % colors.Count); ++i)
         {
             int indexColor2Add = rand.Next(0, colors2Add.Count);
@@ -98,7 +89,7 @@ public class ColorGame : Game
         foreach (Character participant in participants)
         {
             int indexColor2Attribute = rand.Next(0, colors2Attribute.Keys.Count);
-            Color color2Attribute = (new List<Color>(colors2Attribute.Keys))[indexColor2Attribute];
+            ColorData color2Attribute = (new List<ColorData>(colors2Attribute.Keys))[indexColor2Attribute];
             participantsColors[participant] = color2Attribute;        
             colors2Attribute[color2Attribute]--;
             if (colors2Attribute[color2Attribute] == 0)
@@ -106,11 +97,11 @@ public class ColorGame : Game
                 colors2Attribute.Remove(color2Attribute);
             }
 #if DEBUG
-            //Debug.Log("Participant " + participant.name + " was attributed color " + Color2String(color2Attribute));
-            participant.GetComponent<Renderer>().material.color = color2Attribute;
+            //Debug.Log("Participant " + participant.name + " was attributed color " + color2Attribute);
+            participant.GetComponent<Renderer>().material.color = participantsColors[participant].color;
             if (participant != player)
             {
-                buttons[participant].GetComponent<Image>().color = participantsColors[participant];
+                buttons[participant].GetComponent<Image>().color = participantsColors[participant].color;
             }
 #endif
         }
@@ -157,8 +148,6 @@ public class ColorGame : Game
             }
         }
         CheckAnswers();
-        // TODO : Colors ATTRIBUTION only if State!=FINISH => nb participants > participants needed ?
-        //ColorsAttribution();
     }
 
     private void CheckAnswers()
@@ -186,7 +175,7 @@ public class ColorGame : Game
         {
             foreach (Character losingParticipant in losingParticipants)
             {
-                if (!losingParticipants.Contains(character))
+                if (!losingParticipants.Contains(character) && character.relations.ContainsKey(losingParticipant))
                 {
                     character.relations.Remove(losingParticipant);
                 }
@@ -207,7 +196,6 @@ public class ColorGame : Game
         //TODO : surviving participants needs to update confiance according to other participants answers
         foreach (Character character in participants)
         {
-            Debug.Log(character.name);
             //TODO : create Bot class and use directly Clear without Bot Condition
             if (character.CompareTag("Bot"))
             {
@@ -244,22 +232,24 @@ public class ColorGame : Game
         if (receiver.CompareTag("Bot"))
         {
             Debug.Log("Bot Answer");
-            dialogue.Add(new Message(receiver, "Yes, It is " + Color2String(receiver.Asked(sender))));
+            dialogue.Add(new Message(receiver, "Yes, It is " + receiver.Asked(sender)));
         }
         else
         {
             Debug.Log("Player Answer");
             // TODO : Interractions with other players
-            dialogue.Add(new Message(receiver, "Yes, It is " + Color2String(GetData(receiver))));
+            dialogue.Add(new Message(receiver, "Yes, It is " + GetData(receiver)));
         }
 
         dialogue.Add(new Message(receiver, "And you ?"));
-        List<string> colorChoices = new List<string>();
-        foreach (Color color in colors)
+        /*void ActionLog(ColorData col)
         {
-            colorChoices.Add(Color2String(color));
-        }
-        dialogue.Add(new ChoicesMessage(sender, "For me, is ", colorChoices));
+            Debug.Log("Action " + sender.name + " to " + receiver.name + " with " + col);
+        }*/
+        Action<ColorData> action = (col) => receiver.Response(sender, col);
+        //action += ActionLog;
+        dialogue.Add(new ChoicesMessage<ColorData>(sender, "For me, is ", colors, action));
+
         // TODO : Apply player Answer for Bot
         GameManager.Instance.ui.SetDialogue(dialogue);
         GameManager.Instance.ui.ActivateDialogueBox();
@@ -286,12 +276,12 @@ public class ColorGame : Game
         return colors.Count;
     }
 
-    public Color GetData(Character character)
+    public ColorData GetData(Character character)
     {
         return participantsColors[character];
     }
 
-    public Color GetAnotherRandomColor(Color color)
+    public ColorData GetAnotherRandomColor(ColorData color)
     {
         int index = colors.IndexOf(color);
         System.Random rand = new System.Random();

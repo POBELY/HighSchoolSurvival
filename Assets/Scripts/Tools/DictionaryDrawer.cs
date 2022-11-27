@@ -175,3 +175,4 @@ public abstract class DictionaryDrawer<TK, TV> : PropertyDrawer
 [CustomPropertyDrawer(typeof(MyDictionary1))]
 public class MyDictionaryDrawer1 : DictionaryDrawer<string, int> { }
 public class RelationsDictionaryDrawer : DictionaryDrawer<Character, byte> { }
+public class ConfianceDictionaryDrawer : DictionaryDrawer<string, byte> { }

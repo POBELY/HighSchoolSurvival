@@ -9,8 +9,8 @@ public class ColorGameAI : AI
     private ColorGame game;
     private Character participant;
 
-    private Dictionary<Character,Color>  answersGived = new Dictionary<Character, Color>();
-    private Dictionary<Character, Color> answersReceived = new Dictionary<Character, Color>();
+    private Dictionary<Character, ColorData>  answersGived = new Dictionary<Character, ColorData>();
+    private Dictionary<Character, ColorData> answersReceived = new Dictionary<Character, ColorData>();
 
     public ColorGameAI(ColorGame _game, Character _participant) /*: base(_game,_participant)*/
     {
@@ -30,10 +30,10 @@ public class ColorGameAI : AI
     }
 
     // TODO : How to Generic : DataType Ask(character)
-    public /*override*/ Color Ask(Character character)
+    public /*override*/ ColorData Ask(Character character)
     {
         //TODO : return participant.getData()
-        Color participantColor = game.GetData(participant);
+        ColorData participantColor = game.GetData(participant);
         //Debug.Log(character.name + " Ask to " + participant.name);
         //Debug.Log("Bernoulli Law p(" + participant.GetRelation(character) / (double) Character.maxByteValue + ")");
 
@@ -42,7 +42,7 @@ public class ColorGameAI : AI
             return answersGived[character];
         }
 
-        Color colorAnswered = participantColor;
+        ColorData colorAnswered = participantColor;
         if (AI.BernoulliLaw(participant.GetRelation(character) / (double) Character.maxByteValue)) {
             // Return Truth
             colorAnswered = participantColor;
@@ -62,7 +62,7 @@ public class ColorGameAI : AI
 
         byte maxConfiance = 0;
         Character answer = game.GetAnotherRandomParticipant(participant);
-        Color participantColor = game.GetData(participant); // TODO : return participant.getData()
+        ColorData participantColor = game.GetData(participant); // TODO : return participant.getData()
         switch (participant.GetStrategy())
         {
             case STRATEGY.RANDOM:
@@ -162,6 +162,11 @@ public class ColorGameAI : AI
         game.ParticipantAnswer(participant, answer);
     }
 
+    public void Response(Character character, ColorData color)
+    {
+        answersReceived[character] = color;
+    }
+
     public override void Clear()
     {
         answersGived.Clear();
@@ -169,7 +174,7 @@ public class ColorGameAI : AI
     }
 
     // TODO : How to Generic
-    public void CheckAnswers(Dictionary<Character, Color> goodAnswers)
+    public void CheckAnswers(Dictionary<Character, ColorData> goodAnswers)
     {
         // TODO : Check answerReceived Cleaning
         foreach (Character character in goodAnswers.Keys)
@@ -181,11 +186,13 @@ public class ColorGameAI : AI
                 if (answersReceived.ContainsKey(character) && answersReceived[character] == goodAnswers[character])
                 {
                     // Increment confiance
+                    //Debug.Log("Increment relation between " + participant.name + " and " + character.name + " of " + confiance);
                     participant.IncrementRelation(character, confiance);
                 }
                 else
                 {
                     //Decrement confiance
+                    //Debug.Log("Decrement relation between " + participant.name + " and " + character.name + " of " + confiance);
                     participant.DecrementRelation(character, confiance);
                 }
             }

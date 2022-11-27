@@ -39,11 +39,6 @@ public class UI : MonoBehaviour
         if (dialoguing)
         {
             UpdateCurrentMessage();
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Debug.Log("UI Update Space Bar");
-                ReadNextMessage();
-            }
         }
         
     }
@@ -100,23 +95,23 @@ public class UI : MonoBehaviour
     private void ReadFirstMessage()
     {
         Assert.IsTrue(dialogue.Count > 0);
-        Debug.Log("ReadFirstMessage : " + dialogueIndex);
+        //Debug.Log("ReadFirstMessage : " + dialogueIndex);
         dialogueIndex = 0;
         dialogue[dialogueIndex].Execute();
     }
 
-    private void ReadNextMessage()
+    public void ReadNextMessage()
     {
-        Debug.Log("ReadNextMessage : " + dialogueIndex);
+        //Debug.Log("ReadNextMessage : " + dialogueIndex);
         ++dialogueIndex;
         if (dialogue.Count > dialogueIndex)
         {
-            Debug.Log("ReadNextMessage Continue");
+            //Debug.Log("ReadNextMessage Continue");
             dialogue[dialogueIndex].Execute();
         }
         else
         {
-            Debug.Log("ReadNextMessage End");
+            //Debug.Log("ReadNextMessage End");
             DisactivateDialogueBox();
             dialoguing = false;
         }

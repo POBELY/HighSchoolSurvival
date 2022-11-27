@@ -13,19 +13,15 @@ public class Player : Character
     private Vector3 playerVelocity;
     static private float playerSpeed = 10.0f;
     //static private float jumpHeight = 1.0f;
-    static private float gravityValue = -9.81f;
+    //static private float gravityValue = -9.81f;
 
     private List<Character> nearCharacters = new List<Character>();
 
 
     // TODO Use Start istead of create ?
-    public Player(Character character)
+    public Player(Character character) : base(character)
     {
-        name = character.name;
-        classname = character.classname;
-        avatar = character.GetAvatar();
         relations = character.relations;
-        dialoguing = false;
         this.tag = "Player";
         controller = this.gameObject.AddComponent<CharacterController>();
         nearCharacters = new List<Character>();
@@ -34,16 +30,16 @@ public class Player : Character
     public void Create(Character character)
     {
         name = character.name;
-        classname = character.classname;
+        classname = character.GetClassname();
+        state = character.GetState();
         avatar = character.GetAvatar();
         relations = character.relations;
-        dialoguing = false;
         this.tag = "Player";
         controller = this.gameObject.AddComponent<CharacterController>();
         nearCharacters = new List<Character>();
     }
 
-    private void Start()
+    protected override void Start()
     {
 
     }
@@ -51,11 +47,13 @@ public class Player : Character
     protected override void Update()
     {
         base.Update();
-        if ( dialoguing ) {
+        //if ( dialoguing ) {
+        if ( state == STATE.DIALOGUING ) {
             controller.Move(Vector3.zero);
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                dialoguing = GameManager.Instance.ui.IsDialoguing();
+                //dialoguing = GameManager.Instance.ui.IsDialoguing();
+                state = GameManager.Instance.ui.IsDialoguing() ? STATE.DIALOGUING : STATE.IDLE;
             }
         } else
         {
@@ -64,7 +62,8 @@ public class Player : Character
             {
                 if (nearCharacters.Count > 0)
                 {
-                    dialoguing = true;
+                    //dialoguing = true;
+                    state = STATE.DIALOGUING;
                     Character interlocutor = FindNearestCharacter();
 
                     // TODO : method to create specific game dialogueBox "Hors narration"
@@ -110,17 +109,21 @@ public class Player : Character
 
         if (move != Vector3.zero)
         {
+            state = STATE.MOVING;
             gameObject.transform.forward = move;
+        } else
+        {
+            state = STATE.IDLE;
         }
 
         // Changes the height position of the player..
         /*if (Input.GetButtonDown("Jump") && controller.isGrounded)
         {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-        }*/
+        }
 
         playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
+        controller.Move(playerVelocity * Time.deltaTime);*/
     }
 
     private Character FindNearestCharacter()

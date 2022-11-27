@@ -15,6 +15,7 @@ public class Game : MonoBehaviour
     [SerializeField] protected int nbParticipantsNeeded = 0;
     protected STATE state = STATE.START;
 
+    // TODO : Create class LoadCSV
     public void LoadConfiances()
     {
 
@@ -58,6 +59,8 @@ public class Game : MonoBehaviour
         // Create Player
         player = character.gameObject.AddComponent<Player>();
         player.Create(character);
+        //player = new Player(character);
+
         // Replace character reference by player
         foreach (Character participant in participants)
         {

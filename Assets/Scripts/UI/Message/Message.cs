@@ -15,7 +15,10 @@ public class Message {
 
     public virtual void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameManager.Instance.ui.ReadNextMessage();
+        }
     }
 
     public virtual void Execute()
