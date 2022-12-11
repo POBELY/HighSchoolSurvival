@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Assertions;
 
 public class Game : MonoBehaviour
 {
@@ -20,10 +21,10 @@ public class Game : MonoBehaviour
     {
 
         string[] studentsName = { "Student (1)", "Student (2)", "Student (3)", "Student (4)", "Student (5)", "Student (6)", "Student (7)", "Student (8)", "Student (9)", "Student (10)", "Student (11)", "Student (12)", "Student (13)", "Student (14)", "Student (15)", "Student (16)", "Student (17)", "Student (18)", "Student (19)", "Student (20)" };
-        Dictionary<string, Character> students = new Dictionary<string, Character>();
+        Dictionary<string, Bot> students = new Dictionary<string, Bot>();
         foreach (string student in studentsName)
         {
-            students.Add(student, GameObject.Find(student).GetComponent<Character>());
+            students.Add(student, GameObject.Find(student).GetComponent<Bot>());
         }
 
         List<Dictionary<string, object>> data = CSVReader.Read("ConfiancesTable");
@@ -65,16 +66,14 @@ public class Game : MonoBehaviour
         foreach (Character participant in participants)
         {
             if ( participant.CompareTag("Bot") ) {
-                participant.relations.Add(player, participant.relations[character]);
-                participant.relations.Remove(character);
-            }
-
+                Bot bot = participant as Bot;
+                Assert.IsNotNull(bot);
+                bot.relations.Add(player, bot.relations[character]);
+                bot.relations.Remove(character);
 #if DEBUG
-            // To see relations
-            participant.CopyRelations();
+                bot.CopyRelations();
 #endif
-
-
+            }
         }
         participants[indexPlayer] = player;
         // Destroy unused character
@@ -88,7 +87,6 @@ public class Game : MonoBehaviour
     }
 
     public virtual void Discussion(Character sender, Character receiver) {
-        //Debug.Log("Game Discussion");
     }
 
     public List<Character> GetParticipants()

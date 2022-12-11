@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 // TODO : Check template<DataType,AnswerType>
 abstract public class AI
 {
@@ -60,5 +59,13 @@ abstract public class AI
     {
 
     }
+
+    public abstract Data AskedBy(Character character);
+
+    public abstract void GetResponse(Character character, Data data);
+
+    public abstract void GiveAnswer();
+
+    public abstract void CheckAnswers<D>(Dictionary<Character, D> goodAnswers) where D : Data;
 
 }

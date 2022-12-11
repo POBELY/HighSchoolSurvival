@@ -21,7 +21,6 @@ public class Player : Character
     // TODO Use Start istead of create ?
     public Player(Character character) : base(character)
     {
-        relations = character.relations;
         this.tag = "Player";
         controller = this.gameObject.AddComponent<CharacterController>();
         nearCharacters = new List<Character>();
@@ -33,7 +32,6 @@ public class Player : Character
         classname = character.GetClassname();
         state = character.GetState();
         avatar = character.GetAvatar();
-        relations = character.relations;
         this.tag = "Player";
         controller = this.gameObject.AddComponent<CharacterController>();
         nearCharacters = new List<Character>();

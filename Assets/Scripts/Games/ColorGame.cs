@@ -33,10 +33,12 @@ public class ColorGame : Game
 
         foreach (Character participant in participants)
         {
-            if (participant.gameObject.CompareTag("Bot"))
+            //if (participant.gameObject.CompareTag("Bot"))
+            if (! participant.gameObject.CompareTag("Player"))
             {
                 // Instantiate AI
-                participant.SetAI(new ColorGameAI(this, participant));
+                ((Bot)participant).SetAI(new ColorGameAI(this, ((Bot)participant)));
+
                 // Instantiate buttons
                 Button button = Instantiate(buttonPrefab);
                 button.transform.SetParent(grid.transform, false);
@@ -144,7 +146,7 @@ public class ColorGame : Game
             // TODO : void Answer for player
             if (participant.CompareTag("Bot"))
             {     
-                participant.Answer();
+                ( (Bot) participant).GiveAnswer();
             }
         }
         CheckAnswers();
@@ -171,14 +173,19 @@ public class ColorGame : Game
 
         // Cleaning Round
 
-        foreach (Character character in participants)
-        {
+        // TODO : Verif and clean
+        // Clear winners from losers
+        //foreach (Character character in participants)
+        foreach (Character character in participants.Except(losingParticipants))
+            {
             foreach (Character losingParticipant in losingParticipants)
             {
-                if (!losingParticipants.Contains(character) && character.relations.ContainsKey(losingParticipant))
+
+                character.Clear(losingParticipant);
+                /*if (!losingParticipants.Contains(character))
                 {
-                    character.relations.Remove(losingParticipant);
-                }
+                    character.Clear(losingParticipant);
+                }*/
             }
         }
 
@@ -199,10 +206,10 @@ public class ColorGame : Game
             //TODO : create Bot class and use directly Clear without Bot Condition
             if (character.CompareTag("Bot"))
             {
-                character.CheckAnswers(participantsColors);
-                character.Clear();
+                ( (Bot) character).CheckAnswers<ColorData>(participantsColors);
+                ( (Bot) character).Clear();
 #if DEBUG
-                character.CopyRelations();
+                ( (Bot) character).CopyRelations();
 #endif
             }
         }
@@ -232,7 +239,7 @@ public class ColorGame : Game
         if (receiver.CompareTag("Bot"))
         {
             Debug.Log("Bot Answer");
-            dialogue.Add(new Message(receiver, "Yes, It is " + receiver.Asked(sender)));
+            dialogue.Add(new Message(receiver, "Yes, It is " + receiver.AskedBy(sender)));
         }
         else
         {
@@ -246,7 +253,7 @@ public class ColorGame : Game
         {
             Debug.Log("Action " + sender.name + " to " + receiver.name + " with " + col);
         }*/
-        Action<ColorData> action = (col) => receiver.Response(sender, col);
+        Action<ColorData> action = (col) => receiver.GetResponse(sender, col);
         //action += ActionLog;
         dialogue.Add(new ChoicesMessage<ColorData>(sender, "For me, is ", colors, action));
 
@@ -288,4 +295,5 @@ public class ColorGame : Game
         int randomIndex = (index + rand.Next(1, colors.Count)) % colors.Count;
         return colors[randomIndex];
     }
+
 }

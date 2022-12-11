@@ -106,42 +106,11 @@ public class Character : MonoBehaviour
 
     [SerializeField] protected Texture avatar;
 
-    // ai is specific bot attribute
-    //TODO genric AI
-    //private AI ai;
-    private ColorGameAI ai;
-    [SerializeField] private AI.STRATEGY strategy;
-
-    // TODO : Confiance instead of Realtion
-    public static byte maxByteValue = 255;
-    public static byte minByteValue = 0;
-    [Serializable] public struct RelationValue
-    {
-        public Character character;
-        public byte value;
-    }
-
-    // TODO : be private, specific Bot attribute
-    public Dictionary<Character, byte> relations = new Dictionary<Character, byte>();
-
-#if DEBUG
-    [SerializeField] public List<ConfianceTest> relations2 = new List<ConfianceTest>();
-
-    public void CopyRelations()
-    {
-        relations2.Clear();
-        foreach (Character character in relations.Keys)
-        {
-            relations2.Add(new ConfianceTest(character.name, relations[character]));
-        }
-    }
-#endif
+  
 
     public Character()
     {
         state = STATE.IDLE;
-        relations = new Dictionary<Character, byte>();
-        relations2 = new List<ConfianceTest>();
     }
 
         public Character(Character character)
@@ -151,15 +120,6 @@ public class Character : MonoBehaviour
         state = character.state;
         avatar = character.GetAvatar();
 
-        
-
-        relations = character.relations;
-#if DEBUG
-        relations2 = character.relations2;
-#endif
-        //this.tag = "Player";
-        //controller = this.gameObject.AddComponent<CharacterController>();
-        //nearCharacters = new List<Character>();
     }
 
 
@@ -175,75 +135,20 @@ public class Character : MonoBehaviour
         
     }
 
-    // TODO : Reanme method, we don't know who ask who when called (AskedBy ?)
-    // TODO : How to Generic : Bot class
-    public ColorData Asked(Character character)
+    // TODO : abstract ? for Player ?
+    public virtual Data AskedBy(Character character)
     {
-        return ai.Ask(character);
+        return null;
     }
 
-    // TODO : How to Generic : Bot class
-    public void Response(Character character, ColorData color)
+    public virtual void GetResponse(Character character, Data data)
     {
-        ai.Response(character, color);
     }
 
-    // TODO : How to Generic : Bot class
-    public void Answer()
+    // TODO : abstract
+    public virtual void Clear(Character character)
     {
-        ai.Choice();
-    }
 
-    public void IncrementRelation(Character character, byte increment)
-    {
-        //Debug.Log("increment relation " + this.name + " and " + character.name + " : " + increment);
-        Assert.IsTrue(relations.ContainsKey(character));
-        /*if (maxByteValue - relations[character] > increment)
-        {
-            relations[character] += increment;
-        } else
-        {
-            relations[character] = maxByteValue;
-        }*/
-        // Other method
-        relations[character] += (byte) Math.Min(increment, maxByteValue - relations[character]);
-    }
-
-    public void DecrementRelation(Character character, byte decrement)
-    {
-        //Debug.Log("decrement relation " + this.name + " and " + character.name + " : " + decrement);
-        Assert.IsTrue(relations.ContainsKey(character));
-        /*if (relations[character] < decrement )
-        {
-            relations[character] = minByteValue;
-        }
-        else
-        {
-            relations[character] -= decrement;
-        }*/
-        // Other method
-        relations[character] -= (byte) Math.Min(decrement, relations[character]);
-    }
-
-    public byte GetRelation(Character character)
-    {
-        return relations[character];
-    }
-
-    //public void SetAI(AI _ai)
-    public void SetAI(ColorGameAI _ai)
-    {
-        ai = _ai;
-    }
-
-    public AI.STRATEGY GetStrategy()
-    {
-        return strategy;
-    }
-
-    public void SetStrategy(string _strategy)
-    {
-        strategy = AI.GetStrategy(_strategy);
     }
 
     public Texture GetAvatar()
@@ -261,16 +166,6 @@ public class Character : MonoBehaviour
         return state;
     }
 
-    // TODO : How to Generic : Bot class
-    public void Clear()
-    {
-        ai.Clear();
-    }
 
-    // TODO : How to Generic : Bot class
-    public void CheckAnswers(Dictionary<Character, ColorData> goodAnswers)
-    {
-        ai.CheckAnswers(goodAnswers);
-    }
 
 }

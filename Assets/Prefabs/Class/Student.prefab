@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 8370919209381684591}
   - component: {fileID: 8370919209381684588}
   - component: {fileID: 8370919209381684589}
-  - component: {fileID: 8370919209381684590}
   - component: {fileID: 48062187004136327}
+  - component: {fileID: 6389106391485410950}
   m_Layer: 0
   m_Name: Student
   m_TagString: Bot
@@ -99,34 +99,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8370919209381684590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8370919209381684576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a11437fff2597b4c913535573c27423, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  classname: 0
-  avatar: {fileID: 2800000, guid: d84eed84075ae3b48b4c3875b1c3bbcc, type: 3}
-  strategy: 0
-  relations2:
-    _Buckets: ffffffffffffffffffffffff
-    _HashCodes: 000000000000000000000000
-    _Next: 000000000000000000000000
-    _Count: 0
-    _Version: 0
-    _FreeList: -1
-    _FreeCount: 0
-    _Keys:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    _Values: 000000
 --- !u!135 &48062187004136327
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -140,3 +112,20 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6389106391485410950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8370919209381684576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 366ae15671b36a545a929610cdcb04ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  classname: 0
+  avatar: {fileID: 2800000, guid: d84eed84075ae3b48b4c3875b1c3bbcc, type: 3}
+  strategy: 2
+  relations2: []

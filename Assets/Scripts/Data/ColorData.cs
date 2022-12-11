@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColorData
+public class ColorData : Data
 {
     private static Dictionary<Color, string> colorsName = new Dictionary<Color, string>() { { Color.blue, "blue" }, { Color.green, "green" }, { Color.red, "red" }, { Color.yellow, "yellow" } };
 

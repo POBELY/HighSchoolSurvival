@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class ColorGameAI : AI
 {
 
     // TODO getIt by subGameManage ColorGameManager
     private ColorGame game;
-    private Character participant;
+    private Bot participant;
 
     private Dictionary<Character, ColorData>  answersGived = new Dictionary<Character, ColorData>();
     private Dictionary<Character, ColorData> answersReceived = new Dictionary<Character, ColorData>();
 
-    public ColorGameAI(ColorGame _game, Character _participant) /*: base(_game,_participant)*/
+    public ColorGameAI(ColorGame _game, Bot _participant) /*: base(_game,_participant)*/
     {
         game = _game;
         participant = _participant;
@@ -43,7 +44,7 @@ public class ColorGameAI : AI
         }
 
         ColorData colorAnswered = participantColor;
-        if (AI.BernoulliLaw(participant.GetRelation(character) / (double) Character.maxByteValue)) {
+        if (AI.BernoulliLaw(participant.GetRelation(character) / (double) Bot.maxByteValue)) {
             // Return Truth
             colorAnswered = participantColor;
         } else
@@ -70,12 +71,13 @@ public class ColorGameAI : AI
             case STRATEGY.CONFIANCE:
                 foreach (Character character in game.GetParticipants())
                 {
-                    // TODO : Take also potentially player answer in account
                     if (character != participant)
                     {
                         if (character.CompareTag("Bot"))
                         {
-                            answersReceived[character] = character.Asked(participant);
+                            ColorData colorData = character.AskedBy(participant) as ColorData;
+                            Assert.IsNotNull(colorData);
+                            answersReceived[character] = colorData;
                             if (answersReceived[character] == participantColor)
                             {
                                 if (participant.GetRelation(character) > maxConfiance)
@@ -101,15 +103,16 @@ public class ColorGameAI : AI
                 }
                 break;
             case STRATEGY.MEFIANCE:
-                byte mefiance = (byte) (Character.maxByteValue / game.GetNbColors());
+                byte mefiance = (byte) (Bot.maxByteValue / game.GetNbColors());
                 foreach (Character character in game.GetParticipants())
                 {
-                    // TODO : Take also potentially player answer in account
                     if (character != participant)
                     {
                         if (character.CompareTag("Bot"))
                         {
-                            answersReceived[character] = character.Asked(participant);
+                            ColorData colorData = character.AskedBy(participant) as ColorData;
+                            Assert.IsNotNull(colorData);
+                            answersReceived[character] = colorData;
                             if (answersReceived[character] == participantColor)
                             {
                                 if (participant.GetRelation(character) > maxConfiance)
@@ -139,7 +142,7 @@ public class ColorGameAI : AI
                 }
                 if (maxConfiance < mefiance)
                 {
-                    byte minConfiance = Character.maxByteValue;
+                    byte minConfiance = Bot.maxByteValue;
                     foreach (Character character in answersReceived.Keys)
                     {
 
@@ -198,5 +201,38 @@ public class ColorGameAI : AI
             }
         }
     }
+
+
+
+    public override Data AskedBy(Character character)
+    {
+        return Ask(character);
+    }
+
+    public override void GetResponse(Character character, Data data)
+    {
+        ColorData color = data as ColorData;
+        Assert.IsNotNull(color);
+        Response(character, color);
+    }
+
+    // TODO : Return answer ?
+    public override void GiveAnswer()
+    {
+        Choice();
+    }
+
+    public override void CheckAnswers<D>(Dictionary<Character, D> goodAnswers)
+    {
+        Dictionary<Character, ColorData> goodColorsAnswers = new Dictionary<Character, ColorData>();
+        foreach (Character character in goodAnswers.Keys)
+        {
+            ColorData colorData = goodAnswers[character] as ColorData;
+            Assert.IsNotNull(colorData);
+            goodColorsAnswers.Add(character, colorData);
+        }
+        CheckAnswers(goodColorsAnswers);
+    }
+
 
 }
