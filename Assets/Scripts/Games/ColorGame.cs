@@ -9,6 +9,9 @@ using System.Linq;
 public class ColorGame : Game
 {
 
+    protected Dictionary<Character,Character> answers = new Dictionary<Character, Character>();
+
+    // static ColorData element ?
     private List<ColorData> colors = new List<ColorData> { new ColorData(Color.blue), new ColorData(Color.green), new ColorData(Color.red), new ColorData(Color.yellow) };
 
     private Dictionary<Character, ColorData> participantsColors = new Dictionary<Character, ColorData>(); // Datas

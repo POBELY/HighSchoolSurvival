@@ -10,10 +10,15 @@ public class Game : MonoBehaviour
     public enum STATE {START, RUNNING, PAUSE, FINISH };
 
     [SerializeField] protected List<Character> participants;
-    protected Dictionary<Character,Character> answers = new Dictionary<Character, Character>();
+
+    //TODO : specific by subGameManager / specific games ?
+    //protected Dictionary<Character,Character> answers = new Dictionary<Character, Character>();
+    //protected Dictionary<Character, Object> answers = new Dictionary<Character, Object>();
+
     // TODO : update to be able to have multiple players 
     protected Player player;
     [SerializeField] protected int nbParticipantsNeeded = 0;
+    // TODO : Nb round ? / round number ?
     protected STATE state = STATE.START;
 
     // TODO : Create class LoadCSV
