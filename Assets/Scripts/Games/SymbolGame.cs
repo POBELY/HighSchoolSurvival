@@ -222,7 +222,7 @@ public class SymbolGame : Game
         dialogue.Add(new Message(sender, "Hello, can you tell me the symbol that you will choose please ?"));
         if (receiver.CompareTag("Bot"))
         {
-            Debug.Log("Bot Answer");
+            //Debug.Log("Bot Answer");
             dialogue.Add(new Message(receiver, "Yes, It will be a " + receiver.AskedBy(sender)));
         }
         else

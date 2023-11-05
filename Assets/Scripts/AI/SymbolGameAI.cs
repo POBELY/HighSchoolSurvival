@@ -160,7 +160,7 @@ public class SymbolGameAI : AI
         answersReceived.Clear();
     }
 
-    // TODO : How to Generic
+    // TODO : How to Generic, Rename method
     public void CheckAnswers(Dictionary<Character, SymbolData> goodAnswers)
     {
         // TODO : Check answerReceived Cleaning
@@ -206,16 +206,17 @@ public class SymbolGameAI : AI
         Choice();
     }
 
+    // TODO : Rename method
     public override void CheckAnswers<D>(Dictionary<Character, D> goodAnswers)
     {
-        Dictionary<Character, ColorData> goodColorsAnswers = new Dictionary<Character, ColorData>();
+        Dictionary<Character, SymbolData> goodSymbolsAnswers = new Dictionary<Character, SymbolData>();
         foreach (Character character in goodAnswers.Keys)
         {
-            ColorData colorData = goodAnswers[character] as ColorData;
-            Assert.IsNotNull(colorData);
-            goodColorsAnswers.Add(character, colorData);
+            SymbolData symbolData = goodAnswers[character] as SymbolData;
+            Assert.IsNotNull(symbolData);
+            goodSymbolsAnswers.Add(character, symbolData);
         }
-        CheckAnswers(goodColorsAnswers);
+        CheckAnswers(goodSymbolsAnswers);
     }
 
 
