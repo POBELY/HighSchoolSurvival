@@ -695,7 +695,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1511066039}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f5672aa7afa2ff4e9857a27fd345e2f, type: 3}
+  m_Script: {fileID: 11500000, guid: 04d55ceb5b359f648bd01f7bb412ec0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueBoxPrefab: {fileID: 212418214802344775, guid: 4189c20d8ae16ee4ba0bf63989b36a6f, type: 3}
@@ -807,7 +807,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1715369043}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf18b40acefb3a149ace9fe96ef2c78d, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ca47c94958735e47ac132e39b426c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   participants:
@@ -831,7 +831,7 @@ MonoBehaviour:
   - {fileID: 193419316846942397}
   - {fileID: 7482245369347698346}
   - {fileID: 3628244773739383597}
-  nbParticipantsNeeded: 10
+  nbParticipantsNeeded: 12
   buttonPrefab: {fileID: 1175181514480911922, guid: cb818f119555e5d40a92f323cd658750, type: 3}
 --- !u!4 &1715369045
 Transform:
@@ -1299,7 +1299,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6988313300545743462, guid: 116a50116b3002d41a4d2b57aac7f985, type: 3}
       propertyPath: m_RootOrder
-      value: 20
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 6988313300545743462, guid: 116a50116b3002d41a4d2b57aac7f985, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2098,7 +2098,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4780071910217178365, guid: 2a234790aa5b71e4996116539624efb7, type: 3}
       propertyPath: m_RootOrder
-      value: 19
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 4780071910217178365, guid: 2a234790aa5b71e4996116539624efb7, type: 3}
       propertyPath: m_LocalPosition.x

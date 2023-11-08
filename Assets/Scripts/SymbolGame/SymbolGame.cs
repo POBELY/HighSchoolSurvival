@@ -27,29 +27,29 @@ public class SymbolGame : Game
         base.Start();
 
         // Instantiate GridLayoutGroup
-        GameObject gridGameObject = new GameObject("ColorGameGridLayout");
+        GameObject gridGameObject = new GameObject("SybolGameGridLayout");
         grid = gridGameObject.gameObject.AddComponent<GridLayoutGroup>();
         grid.transform.SetParent(GameObject.Find("Canvas").GetComponent<Canvas>().transform, false);
         grid.transform.localPosition = Vector3.zero;
         grid.childAlignment = TextAnchor.MiddleCenter;
         grid.constraint = UnityEngine.UI.GridLayoutGroup.Constraint.FixedRowCount;
 
+        // Instantiate buttons
         foreach (SymbolData symbol in symbols)
         {
             Button button = Instantiate(buttonPrefab);
             button.transform.SetParent(grid.transform, false);
-            button.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = SymbolData.symbolsName[symbol.symbol];
+            button.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = symbol.ToString();
             button.onClick.AddListener(delegate { PlayerAnswer(symbol); });
             button.gameObject.SetActive(false);
             buttons.Add(symbol, button);
         }
 
+        // Instantiate AI
         foreach (Character participant in participants)
         {
-            //if (participant.gameObject.CompareTag("Bot"))
-            if (! participant.gameObject.CompareTag("Player"))
+            if (participant.gameObject.CompareTag("Bot"))
             {
-                // Instantiate AI
                 ((Bot)participant).SetAI(new SymbolGameAI(this, ((Bot)participant)));
             }
         }
@@ -81,8 +81,7 @@ public class SymbolGame : Game
         foreach (Character participant in participants)
         {
             int indexSymbol2Attribute = rand.Next(0, symbols.Count);
-            SymbolData symbol2Attribute = symbols[indexSymbol2Attribute];
-            participantsSymbols[participant] = symbol2Attribute;        
+            participantsSymbols[participant] = symbols[indexSymbol2Attribute];        
         }
     }
 

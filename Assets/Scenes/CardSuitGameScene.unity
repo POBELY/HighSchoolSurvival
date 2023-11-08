@@ -456,7 +456,7 @@ GameObject:
   - component: {fileID: 208167682}
   - component: {fileID: 208167681}
   m_Layer: 0
-  m_Name: SymbolGame
+  m_Name: CardSuitGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -471,11 +471,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 208167680}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c31c9ad3a8f891549b96578d2d48c90a, type: 3}
+  m_Script: {fileID: 11500000, guid: 685f0bd8116ba74408ca63d874069917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   participants:
-  - {fileID: 316966820}
+  - {fileID: 630181390}
   - {fileID: 9124988664797660013}
   - {fileID: 4251236225822325697}
   - {fileID: 5613009595406979715}
@@ -495,7 +495,7 @@ MonoBehaviour:
   - {fileID: 193419316846942397}
   - {fileID: 7482245369347698346}
   - {fileID: 3628244773739383597}
-  nbParticipantsNeeded: 10
+  nbParticipantsNeeded: 12
   buttonPrefab: {fileID: 1175181514480911922, guid: cb818f119555e5d40a92f323cd658750, type: 3}
 --- !u!4 &208167682
 Transform:
@@ -505,7 +505,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 208167680}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.144102, y: 0.6542877, z: 2.6956363}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -574,7 +574,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1592944191321039405, guid: 897220b975a4e484da0d4e47e60d67e0, type: 3}
   m_PrefabInstance: {fileID: 316966818}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &316966820 stripped
+--- !u!114 &630181390 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4222853144233404872, guid: 897220b975a4e484da0d4e47e60d67e0, type: 3}
   m_PrefabInstance: {fileID: 316966818}
@@ -814,7 +814,7 @@ GameObject:
   - component: {fileID: 2052574695}
   - component: {fileID: 2052574694}
   m_Layer: 0
-  m_Name: SymbolGameUI
+  m_Name: CardSuitGameUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

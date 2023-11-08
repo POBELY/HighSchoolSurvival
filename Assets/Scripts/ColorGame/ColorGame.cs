@@ -36,12 +36,12 @@ public class ColorGame : Game
 
         foreach (Character participant in participants)
         {
-            //if (participant.gameObject.CompareTag("Bot"))
-            if (! participant.gameObject.CompareTag("Player"))
+            if (participant.gameObject.CompareTag("Bot"))
             {
                 // Instantiate AI
                 ((Bot)participant).SetAI(new ColorGameAI(this, ((Bot)participant)));
 
+                // TODO : In multiplayer mode, also instantiate it for other players
                 // Instantiate buttons
                 Button button = Instantiate(buttonPrefab);
                 button.transform.SetParent(grid.transform, false);
