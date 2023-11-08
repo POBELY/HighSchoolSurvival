@@ -9,6 +9,9 @@ using System.Linq;
 public class ColorGame : Game
 {
 
+    protected Dictionary<Character,Character> answers = new Dictionary<Character, Character>();
+
+    // static ColorData element ?
     private List<ColorData> colors = new List<ColorData> { new ColorData(Color.blue), new ColorData(Color.green), new ColorData(Color.red), new ColorData(Color.yellow) };
 
     private Dictionary<Character, ColorData> participantsColors = new Dictionary<Character, ColorData>(); // Datas
@@ -33,12 +36,12 @@ public class ColorGame : Game
 
         foreach (Character participant in participants)
         {
-            //if (participant.gameObject.CompareTag("Bot"))
-            if (! participant.gameObject.CompareTag("Player"))
+            if (participant.gameObject.CompareTag("Bot"))
             {
                 // Instantiate AI
                 ((Bot)participant).SetAI(new ColorGameAI(this, ((Bot)participant)));
 
+                // TODO : In multiplayer mode, also instantiate it for other players
                 // Instantiate buttons
                 Button button = Instantiate(buttonPrefab);
                 button.transform.SetParent(grid.transform, false);

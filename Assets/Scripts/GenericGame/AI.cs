@@ -20,6 +20,7 @@ abstract public class AI
         }
     }
 
+    // TODO : Distinct MaxConfiance from Confiance ?
     public enum STRATEGY { CONFIANCE, MEFIANCE, RANDOM };
 
     static public STRATEGY GetStrategy(string strategy)
