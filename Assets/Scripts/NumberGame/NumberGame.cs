@@ -6,20 +6,20 @@ using System;
 using TMPro;
 using System.Linq;
 
-public class SymbolGame : Game
+public class NumberGame : Game
 {
 
     // static SymbolData element ?
-    public static List<SymbolData> symbols = new List<SymbolData> { new SymbolData(SymbolData.SYMBOL.ROUND), new SymbolData(SymbolData.SYMBOL.TRIANGLE), new SymbolData(SymbolData.SYMBOL.SQUARE) };
+    public static List<NumberData> numbers = new List<NumberData> { new NumberData(1), new NumberData(2), new NumberData(3), new NumberData(4), new NumberData(5)};
 
     // TODO : what is difference between answers and participantSymbol ?
-    protected Dictionary<Character,SymbolData> answers = new Dictionary<Character, SymbolData>();
-    private Dictionary<Character, SymbolData> participantsSymbols = new Dictionary<Character, SymbolData>(); // Datas
+    protected Dictionary<Character, NumberData> answers = new Dictionary<Character, NumberData>();
+    private Dictionary<Character, NumberData> participantsNumbers = new Dictionary<Character, NumberData>(); // Datas
 
     [SerializeField] private Button buttonPrefab;
 
     private GridLayoutGroup grid;
-    private Dictionary<SymbolData, Button> buttons = new Dictionary<SymbolData, Button>();
+    private Dictionary<NumberData, Button> buttons = new Dictionary<NumberData, Button>();
 
     // Start is called before the first frame update
     protected override void Start()
@@ -27,7 +27,7 @@ public class SymbolGame : Game
         base.Start();
 
         // Instantiate GridLayoutGroup
-        GameObject gridGameObject = new GameObject("SybolGameGridLayout");
+        GameObject gridGameObject = new GameObject("NumberGameGridLayout");
         grid = gridGameObject.gameObject.AddComponent<GridLayoutGroup>();
         grid.transform.SetParent(GameObject.Find("Canvas").GetComponent<Canvas>().transform, false);
         grid.transform.localPosition = Vector3.zero;
@@ -35,14 +35,14 @@ public class SymbolGame : Game
         grid.constraint = UnityEngine.UI.GridLayoutGroup.Constraint.FixedRowCount;
 
         // Instantiate buttons
-        foreach (SymbolData symbol in symbols)
+        foreach (NumberData number in numbers)
         {
             Button button = Instantiate(buttonPrefab);
             button.transform.SetParent(grid.transform, false);
-            button.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = symbol.ToString();
-            button.onClick.AddListener(delegate { PlayerAnswer(symbol); });
+            button.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = number.ToString();
+            button.onClick.AddListener(delegate { PlayerAnswer(number); });
             button.gameObject.SetActive(false);
-            buttons.Add(symbol, button);
+            buttons.Add(number, button);
         }
 
         // Instantiate AI
@@ -50,10 +50,10 @@ public class SymbolGame : Game
         {
             if (participant.gameObject.CompareTag("Bot"))
             {
-                ((Bot)participant).SetAI(new SymbolGameAI(this, ((Bot)participant)));
+                ((Bot)participant).SetAI(new NumberGameAI(this, ((Bot)participant)));
             }
         }
-        SymbolsAttribution();
+        NumbersAttribution();
         state = STATE.RUNNING;
 
     }
@@ -73,30 +73,30 @@ public class SymbolGame : Game
     }
 
     // TODO : Not necessary ?
-    void SymbolsAttribution()
+    void NumbersAttribution()
     {
         System.Random rand = new System.Random();
         
         // Give one random symbol to each participant
         foreach (Character participant in participants)
         {
-            int indexSymbol2Attribute = rand.Next(0, symbols.Count);
-            participantsSymbols[participant] = symbols[indexSymbol2Attribute];        
+            int indexNumber2Attribute = rand.Next(0, numbers.Count);
+            participantsNumbers[participant] = numbers[indexNumber2Attribute];        
         }
     }
 
     // TODO : Character method calling game method ?
-    public void PlayerAnswer(SymbolData symbol)
+    public void PlayerAnswer(NumberData number)
     {
         ParticipantsAnswer();
-        ParticipantAnswer(player, symbol);
+        ParticipantAnswer(player, number);
         CheckAnswers();
     }
 
-    public void ParticipantAnswer(Character participant, SymbolData answer)
+    public void ParticipantAnswer(Character participant, NumberData answer)
     {
         answers.Add(participant, answer);
-        participantsSymbols[participant] = answer;
+        participantsNumbers[participant] = answer;
     }
 
     public void ParticipantsAnswer()
@@ -114,37 +114,44 @@ public class SymbolGame : Game
     private void CheckAnswers()
     {
 
-        Dictionary<SymbolData, uint> symbolsReceived = new Dictionary<SymbolData, uint>();
-        foreach (SymbolData symbol in symbols)
+        Dictionary<NumberData, byte> numbersReceived = new Dictionary<NumberData, byte>();
+        foreach (NumberData symbol in numbers)
         {
-            symbolsReceived[symbol] = 0;
+            numbersReceived[symbol] = 0;
         }
 
-        foreach (SymbolData answer in answers.Values)
+        foreach (NumberData answer in answers.Values)
         {
-            symbolsReceived[answer]++;
+            numbersReceived[answer]++;
         }
-        // TODO : Manage equality answers cases
-        SymbolData goodAnswer = symbolsReceived.OrderBy(x => x.Value).ToList()[1].Key;
 
-        foreach (SymbolData symbol in symbols)
+        // TODO : Ordered only once
+        IEnumerable<KeyValuePair<NumberData, byte>> orderedNumbersReceived = numbersReceived.OrderBy(x => x.Value).Where(x => x.Value != 0);
+        NumberData goodAnswer1 = orderedNumbersReceived.First().Key;
+        NumberData goodAnswer2 = orderedNumbersReceived.Last().Key;       
+
+        Debug.Log("numbersReceived : " + Assets.Scripts.Tools.Utils.ToString(numbersReceived));
+        Debug.Log("goodAnswer1 : " + goodAnswer1);
+        Debug.Log("goodAnswer2 : " + goodAnswer2);
+
+        foreach (NumberData number in numbers)
         {
-            buttons[symbol].gameObject.SetActive(false);
+            buttons[number].gameObject.SetActive(false);
         }
 
         List<Character> losingParticipants = new List<Character>();
         foreach (Character participant in answers.Keys.ToArray())
         {
-            SymbolData answer = answers[participant];
-            if (answer == goodAnswer)
+            NumberData answer = answers[participant];
+            if (answer == goodAnswer1 || answer == goodAnswer2)
             {
                 Debug.Log("GOOD ANSWER for participant " + participant.name + " : " + answer);
             }
             else 
-            { 
+            {
                 Debug.Log("WRONG ANSWER for participant " + participant.name + " : " + answer);
                 losingParticipants.Add(participant);
-            }      
+            }
         }
         answers.Clear();
 
@@ -168,14 +175,14 @@ public class SymbolGame : Game
             {
                 // TODO : override character destruction / game destroy character method
                 participants.Remove(losingParticipant);
-                participantsSymbols.Remove(losingParticipant);
+                participantsNumbers.Remove(losingParticipant);
                 player.UpdateRemovedParticipant(losingParticipant);
                 Destroy(losingParticipant.gameObject);
             } else if (losingParticipant.CompareTag("Player")) {
                 Debug.Log("FAILED Round");
                 // TODO : EndGame/Losing method
                 participants.Remove(player);
-                participantsSymbols.Remove(player);
+                participantsNumbers.Remove(player);
                 Destroy(player.gameObject);
                 state = STATE.FINISH;
             }
@@ -187,7 +194,7 @@ public class SymbolGame : Game
             //TODO : create Bot class and use directly Clear without Bot Condition
             if (character.CompareTag("Bot"))
             {
-                ((Bot)character).CheckAnswers<SymbolData>(participantsSymbols);
+                ((Bot)character).CheckAnswers<NumberData>(participantsNumbers);
                 ((Bot)character).Clear();
 #if DEBUG
                 ((Bot)character).CopyRelations();
@@ -204,7 +211,7 @@ public class SymbolGame : Game
         if (participants.Count >= nbParticipantsNeeded)
         {
             Debug.Log("New Round");
-            SymbolsAttribution();
+            NumbersAttribution();
         } else
         {
             state = STATE.FINISH;
@@ -220,17 +227,17 @@ public class SymbolGame : Game
 
         // TODO : Create dialogue from source file
         List<Message> dialogue = new List<Message>();
-        dialogue.Add(new Message(sender, "Hello, can you tell me the symbol that you will choose please ?"));
+        dialogue.Add(new Message(sender, "Hello, can you tell me the number that you will choose please ?"));
         if (receiver.CompareTag("Bot"))
         {
             //Debug.Log("Bot Answer");
-            dialogue.Add(new Message(receiver, "Yes, It will be a " + receiver.AskedBy(sender)));
+            dialogue.Add(new Message(receiver, "Yes, It will be " + receiver.AskedBy(sender)));
         }
         else
         {
             Debug.Log("Player Answer");
             // TODO : Interractions with other players
-            dialogue.Add(new Message(receiver, "Yes, It is " + GetData(receiver)));
+            dialogue.Add(new Message(receiver, "Yes, It will be " + GetData(receiver)));
         }
 
         dialogue.Add(new Message(receiver, "And you ?"));
@@ -238,9 +245,9 @@ public class SymbolGame : Game
         {
             Debug.Log("Action " + sender.name + " to " + receiver.name + " with " + col);
         }*/
-        Action<SymbolData> action = (symbol) => receiver.GetResponse(sender, symbol);
+        Action<NumberData> action = (symbol) => receiver.GetResponse(sender, symbol);
         //action += ActionLog;
-        dialogue.Add(new ChoicesMessage<SymbolData>(sender, "For me, is ", symbols, action));
+        dialogue.Add(new ChoicesMessage<NumberData>(sender, "For me, it will be ", numbers, action, true));
 
         // TODO : Apply player Answer for Bot
         GameManager.Instance.ui.SetDialogue(dialogue);
@@ -264,31 +271,31 @@ public class SymbolGame : Game
     }
 
     // TODO : Data method ?
-    public int GetNbSymbols()
+    public int GetNbNumbers()
     {
-        return symbols.Count;
+        return numbers.Count;
     }
 
-    public SymbolData GetData(Character character)
+    public NumberData GetData(Character character)
     {
-        return participantsSymbols[character];
-    }
-
-    // TODO : Data method ?
-    public SymbolData GetRandomSymbol()
-    {
-        System.Random rand = new System.Random();
-        int randomIndex = rand.Next(0, symbols.Count);
-        return symbols[randomIndex];
+        return participantsNumbers[character];
     }
 
     // TODO : Data method ?
-    public SymbolData GetAnotherRandomSymbol(SymbolData symbol)
+    public NumberData GetRandomNumber()
     {
-        int index = symbols.IndexOf(symbol);
         System.Random rand = new System.Random();
-        int randomIndex = (index + rand.Next(1, symbols.Count)) % symbols.Count;
-        return symbols[randomIndex];
+        int randomIndex = rand.Next(0, numbers.Count);
+        return numbers[randomIndex];
+    }
+
+    // TODO : Data method ?
+    public NumberData GetAnotherRandomNumber(NumberData symbol)
+    {
+        int index = numbers.IndexOf(symbol);
+        System.Random rand = new System.Random();
+        int randomIndex = (index + rand.Next(1, numbers.Count)) % numbers.Count;
+        return numbers[randomIndex];
     }
 
 }

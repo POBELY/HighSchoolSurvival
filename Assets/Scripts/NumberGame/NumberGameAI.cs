@@ -4,17 +4,17 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using System.Linq;
 
-public class SymbolGameAI : AI
+public class NumberGameAI : AI
 {
 
     // TODO getIt by subGameManage SymbolGameManager
-    private SymbolGame game;
+    private NumberGame game;
     private Bot participant;
 
-    private Dictionary<Character, SymbolData> answersGived = new Dictionary<Character, SymbolData>();
-    private Dictionary<Character, SymbolData> answersReceived = new Dictionary<Character, SymbolData>();
+    private Dictionary<Character, NumberData> answersGived = new Dictionary<Character, NumberData>();
+    private Dictionary<Character, NumberData> answersReceived = new Dictionary<Character, NumberData>();
 
-    public SymbolGameAI(SymbolGame _game, Bot _participant) /*: base(_game,_participant)*/
+    public NumberGameAI(NumberGame _game, Bot _participant) /*: base(_game,_participant)*/
     {
         game = _game;
         participant = _participant;
@@ -32,10 +32,10 @@ public class SymbolGameAI : AI
     }
 
     // TODO : How to Generic : DataType Ask(character)
-    public /*override*/ SymbolData Ask(Character character)
+    public /*override*/ NumberData Ask(Character character)
     {
         //TODO : return participant.getData()
-        SymbolData participantSymbol = game.GetData(participant);
+        NumberData participantNumber = game.GetData(participant);
         //Debug.Log(character.name + " Ask to " + participant.name);
         //Debug.Log("Bernoulli Law p(" + participant.GetRelation(character) / (double) Character.maxByteValue + ")");
 
@@ -44,14 +44,14 @@ public class SymbolGameAI : AI
             return answersGived[character];
         }
 
-        SymbolData symbolAnswered = participantSymbol;
+        NumberData symbolAnswered = participantNumber;
         if (AI.BernoulliLaw(participant.GetRelation(character) / (double) Bot.maxByteValue)) {
             // Return Truth
-            symbolAnswered = participantSymbol;
+            symbolAnswered = participantNumber;
         } else
         {
             // Return Lie
-            symbolAnswered = game.GetAnotherRandomSymbol(participantSymbol);
+            symbolAnswered = game.GetAnotherRandomNumber(participantNumber);
         }
         answersGived[character] = symbolAnswered;
         return symbolAnswered;
@@ -62,25 +62,15 @@ public class SymbolGameAI : AI
     public override void Choice()
     {
 
-        Dictionary<SymbolData, uint> symbolsReceived = new Dictionary<SymbolData, uint>();
-        foreach (SymbolData symbol in SymbolGame.symbols)
+        Dictionary<NumberData, byte> numbersReceived = new Dictionary<NumberData, byte>();
+        foreach (NumberData symbol in NumberGame.numbers)
         {
-            symbolsReceived[symbol] = 0;
+            numbersReceived[symbol] = 0;
         }
-
-            switch (participant.GetStrategy())
+        NumberData numberAnswer = game.GetRandomNumber();
+        switch (participant.GetStrategy())
         {
             case STRATEGY.RANDOM:
-                SymbolData randomSymbol = game.GetRandomSymbol();
-                symbolsReceived[randomSymbol]++;
-                foreach (SymbolData symbol in SymbolGame.symbols)
-                {
-                    if (symbol != randomSymbol)
-                    {
-                        symbolsReceived[symbol] = 2;
-                        break;
-                    }
-                }
                 break;
             case STRATEGY.CONFIANCE:
                 foreach (Character character in game.GetParticipants())
@@ -89,19 +79,32 @@ public class SymbolGameAI : AI
                     {
                         if (character.CompareTag("Bot"))
                         {
-                            SymbolData symbolData = character.AskedBy(participant) as SymbolData;
-                            Assert.IsNotNull(symbolData);
-                            answersReceived[character] = symbolData;
-                            symbolsReceived[symbolData]++;
+                            NumberData numberData = character.AskedBy(participant) as NumberData;
+                            Assert.IsNotNull(numberData);
+                            answersReceived[character] = numberData;
+                            numbersReceived[numberData]++;
                         }
                         else if (character.CompareTag("Player"))
                         {
                             if (answersReceived.ContainsKey(character))
                             {
-                                symbolsReceived[answersReceived[character]]++;
+                                numbersReceived[answersReceived[character]]++;
                             }
                         }
                     }
+                }
+
+                IEnumerable<KeyValuePair<NumberData, byte>> orderedNumbersReceived = numbersReceived.OrderBy(x => x.Value).Where(x => x.Value != 0);
+                KeyValuePair<NumberData, byte> minKpv = orderedNumbersReceived.First();
+                KeyValuePair<NumberData, byte> maxKpv = orderedNumbersReceived.Last();
+                int val1 = orderedNumbersReceived.ToList()[1].Value - minKpv.Value;
+                int val2 = maxKpv.Value - orderedNumbersReceived.ToList()[orderedNumbersReceived.Count() - 2].Value;
+                if (val1 > val2)
+                {
+                    numberAnswer = minKpv.Key;
+                } else
+                {
+                    numberAnswer = maxKpv.Key;
                 }
                 break;
             case STRATEGY.MEFIANCE:
@@ -112,32 +115,43 @@ public class SymbolGameAI : AI
                     {
                         if (character.CompareTag("Bot"))
                         {
-                            SymbolData symbolData = character.AskedBy(participant) as SymbolData;
-                            Assert.IsNotNull(symbolData);
-                            answersReceived[character] = symbolData;
-
+                            NumberData numberData = character.AskedBy(participant) as NumberData;
+                            Assert.IsNotNull(numberData);
+                            answersReceived[character] = numberData;
                         }
 
                         if (answersReceived.ContainsKey(character))
                         {
                             if (participant.GetRelation(character) > mefiance)
                             {
-                                symbolsReceived[answersReceived[character]]++;
+                                numbersReceived[answersReceived[character]]++;
                             }
                             else
                             {
-                                foreach (SymbolData symbol in SymbolGame.symbols)
+                                foreach (NumberData number in NumberGame.numbers)
                                 {
-                                    if (symbol != answersReceived[character])
+                                    if (number != answersReceived[character])
                                     {
-                                        symbolsReceived[symbol]++;
+                                        numbersReceived[number]++;
                                     }
                                 }
                             }
                         }
-
                     }
-
+                }
+                // TODO : Duplication with CONFIANCE :/
+                IEnumerable<KeyValuePair<NumberData, byte>> orderedNumbersReceivedMef= numbersReceived.OrderBy(x => x.Value);
+                KeyValuePair<NumberData, byte> minKpvMef = orderedNumbersReceivedMef.First();
+                KeyValuePair<NumberData, byte> maxKpvMef = orderedNumbersReceivedMef.Last();
+                int val1Mef = orderedNumbersReceivedMef.ToList()[1].Value - minKpvMef.Value;
+                int val2Mef = maxKpvMef.Value - orderedNumbersReceivedMef.ToList()[orderedNumbersReceivedMef.Count() - 2].Value;
+                if (val1Mef > val2Mef)
+                {
+                    numberAnswer = minKpvMef.Key;
+                }
+                else
+                {
+                    numberAnswer = maxKpvMef.Key;
                 }
                 break;
             default:
@@ -145,15 +159,12 @@ public class SymbolGameAI : AI
                 break;
         }
 
-
-
-        SymbolData symbolAnswer = symbolsReceived.OrderBy(x => x.Value).ToList()[1].Key;
-        game.ParticipantAnswer(participant, symbolAnswer);
+        game.ParticipantAnswer(participant, numberAnswer);
     }
 
-    public void Response(Character character, SymbolData symbol)
+    public void Response(Character character, NumberData number)
     {
-        answersReceived[character] = symbol;
+        answersReceived[character] = number;
     }
 
     public override void Clear()
@@ -163,7 +174,7 @@ public class SymbolGameAI : AI
     }
 
     // TODO : How to Generic, Rename method
-    public void CheckAnswers(Dictionary<Character, SymbolData> goodAnswers)
+    public void CheckAnswers(Dictionary<Character, NumberData> goodAnswers)
     {
         // TODO : Check answerReceived Cleaning
         foreach (Character character in goodAnswers.Keys)
@@ -197,9 +208,9 @@ public class SymbolGameAI : AI
 
     public override void GetResponse(Character character, Data data)
     {
-        SymbolData symbol = data as SymbolData;
-        Assert.IsNotNull(symbol);
-        Response(character, symbol);
+        NumberData number = data as NumberData;
+        Assert.IsNotNull(number);
+        Response(character, number);
     }
 
     // TODO : Return answer ?
@@ -211,12 +222,12 @@ public class SymbolGameAI : AI
     // TODO : Rename method
     public override void CheckAnswers<D>(Dictionary<Character, D> goodAnswers)
     {
-        Dictionary<Character, SymbolData> goodSymbolsAnswers = new Dictionary<Character, SymbolData>();
+        Dictionary<Character, NumberData> goodSymbolsAnswers = new Dictionary<Character, NumberData>();
         foreach (Character character in goodAnswers.Keys)
         {
-            SymbolData symbolData = goodAnswers[character] as SymbolData;
-            Assert.IsNotNull(symbolData);
-            goodSymbolsAnswers.Add(character, symbolData);
+            NumberData numberData = goodAnswers[character] as NumberData;
+            Assert.IsNotNull(numberData);
+            goodSymbolsAnswers.Add(character, numberData);
         }
         CheckAnswers(goodSymbolsAnswers);
     }
