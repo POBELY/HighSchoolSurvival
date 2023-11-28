@@ -27,7 +27,7 @@ public class SymbolGame : Game
         base.Start();
 
         // Instantiate GridLayoutGroup
-        GameObject gridGameObject = new GameObject("SybolGameGridLayout");
+        GameObject gridGameObject = new GameObject("SymbolGameGridLayout");
         grid = gridGameObject.gameObject.AddComponent<GridLayoutGroup>();
         grid.transform.SetParent(GameObject.Find("Canvas").GetComponent<Canvas>().transform, false);
         grid.transform.localPosition = Vector3.zero;

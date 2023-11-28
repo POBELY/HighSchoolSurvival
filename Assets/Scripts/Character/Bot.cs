@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using UnityEditor;
 using UnityEngine.Assertions;
+using System.Linq;
 
 
 //[Serializable] public class RelationsDictionary : SerializableDictionary<Character, byte> { }
@@ -189,6 +190,14 @@ public class Bot : Character
     public byte GetRelation(Character character)
     {
         return relations[character];
+    }
+
+    public byte GetMeanRelation()
+    {
+        int mean = 0;
+        Array.ForEach(relations.Values.ToArray(), value => mean += value);
+        mean /= relations.Count;
+        return (byte)mean;
     }
 
     // TODO : necesarry ?
